@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS store_items_plants;
+DROP TABLE IF EXISTS users_store_items;
+DROP TABLE IF EXISTS store_items;
+DROP TABLE IF EXISTS events;
+DROP TABLE IF EXISTS users_plants;
+DROP TABLE IF EXISTS achievements_plants;
+DROP TABLE IF EXISTS users_achievements;
+DROP TABLE IF EXISTS plants;
+DROP TABLE IF EXISTS achievements;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS pictures;
