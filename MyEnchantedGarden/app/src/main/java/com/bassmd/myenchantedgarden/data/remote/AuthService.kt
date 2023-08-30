@@ -1,13 +1,10 @@
 package com.bassmd.myenchantedgarden.data.remote
 import com.bassmd.myenchantedgarden.data.remote.dto.LoginRequest
-import com.bassmd.myenchantedgarden.data.remote.dto.LoginResponse
-import io.ktor.client.*
-import io.ktor.client.engine.android.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
-import io.ktor.client.features.logging.*
+import com.bassmd.myenchantedgarden.data.remote.dto.RegisterRequest
+import com.bassmd.myenchantedgarden.data.remote.dto.UserResponse
 
 interface AuthService {
-
-    suspend fun loginUser(loginRequest: LoginRequest): Result<LoginResponse>
+    suspend fun register(registerRequest: RegisterRequest): Result<UserResponse>
+    suspend fun loginUser(loginRequest: LoginRequest): Result<UserResponse>
+    suspend fun logOut(): Result<String>
 }

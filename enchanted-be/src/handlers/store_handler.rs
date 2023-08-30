@@ -3,7 +3,7 @@ use chrono::Utc;
 use serde_json::json;
 use crate::app_config::AppState;
 use crate::middleware::jwt_auth;
-use crate::models::store_handler::{StoreItem, StoreItemRequest};
+use crate::models::store_model::{filter_item_record, FilteredStoreItem, StoreItem, StoreItemRequest};
 use crate::models::user_model::User;
 
 #[get("")]
@@ -29,8 +29,13 @@ async fn get_store_handler(
         .await
         .unwrap();
 
+    let store_response = store_items
+        .into_iter()
+        .map(|s| filter_item_record(&s))
+        .collect::<Vec<FilteredStoreItem>>();
+
     let json_response = json!({
-        "store": store_items
+        "store": store_response
     });
 
     HttpResponse::Ok().json(json_response)
@@ -138,12 +143,14 @@ async fn post_buy_item_handler(
     let new_store_items = store_items
         .into_iter()
         .map(|mut new_item|
-            if new_item.id == item.id {
-                new_item.is_available = false;
-                new_item.was_purchased = true;
-                new_item
-            } else { new_item }
-        ).collect::<Vec<StoreItem>>();
+            {
+                if new_item.id == item.id {
+                    new_item.is_available = false;
+                    new_item.was_purchased = true;
+                }
+                filter_item_record(&new_item)
+            }
+        ).collect::<Vec<FilteredStoreItem>>();
 
     let json_response = json!({
         "store": new_store_items

@@ -19,19 +19,19 @@ pub struct FilteredAchievements {
     pub name: String,
     pub coins: i32,
     pub description: String,
-    pub file_path: String,
-    pub is_unlocked: bool,
-    pub plants_id: i32
+    pub filePath: String,
+    pub isUnlocked: bool,
+    pub plantsId: i32
 }
 
 pub fn filter_achievement_record(achievements: &Achievements) -> FilteredAchievements {
     FilteredAchievements {
         name: achievements.name.to_owned(),
-        is_unlocked: achievements.is_unlocked,
+        isUnlocked: achievements.is_unlocked,
         coins: achievements.coins,
         description: achievements.description.to_owned(),
-        file_path: achievements.file_path.to_owned(),
-        plants_id: achievements.plants_id
+        filePath: achievements.file_path.to_owned(),
+        plantsId: achievements.plants_id
     }
 }
 

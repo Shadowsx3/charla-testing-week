@@ -3,7 +3,7 @@ use chrono::{Duration, Utc};
 use serde_json::json;
 use crate::app_config::AppState;
 use crate::middleware::jwt_auth;
-use crate::models::plant_model::{CollectPlantRequest, Plant};
+use crate::models::plant_model::{CollectPlantRequest, filter_plant_record, FilteredPlant, Plant};
 use crate::models::user_model::{filter_user_record, User};
 
 #[get("")]
@@ -27,8 +27,13 @@ async fn get_plants_handler(
         .await
         .unwrap();
 
+    let plants_response = plants
+        .into_iter()
+        .map(|p| filter_plant_record(&p))
+        .collect::<Vec<FilteredPlant>>();
+
     let json_response = json!({
-        "plants": plants
+        "plants": plants_response
     });
 
     HttpResponse::Ok().json(json_response)

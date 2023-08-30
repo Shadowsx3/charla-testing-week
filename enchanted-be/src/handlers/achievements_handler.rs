@@ -31,6 +31,7 @@ async fn get_achievements_handler(
         .map(|a| filter_achievement_record(&a))
         .collect::<Vec<FilteredAchievements>>();
 
+
     let json_response = json!({
         "achievements": achievements_responses
     });
@@ -132,12 +133,13 @@ async fn post_achievements_unlock_handler(
 
     let new_achievements = achievements
         .into_iter()
-        .map(|mut new_a|
+        .map(|mut new_a| {
             if new_a.id == achievement.id {
                 new_a.is_unlocked = true;
-                new_a
-            } else { new_a }
-        ).collect::<Vec<Achievements>>();
+            }
+            filter_achievement_record(&new_a)
+        }
+        ).collect::<Vec<FilteredAchievements>>();
 
     let json_response = json!({
         "achievements": new_achievements

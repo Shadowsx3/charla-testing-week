@@ -1,7 +1,7 @@
 use actix_web::{get, web, HttpResponse, Responder, error, Scope};
 use crate::middleware::jwt_auth;
 use crate::app_config::AppState;
-use crate::models::event_model::Event;
+use crate::models::event_model::{Event, filter_event_record, FilteredEvent};
 
 #[get("")]
 async fn get_events_handler(
@@ -17,8 +17,13 @@ async fn get_events_handler(
         .await
         .unwrap();
 
+    let events_response = events
+        .into_iter()
+        .map(|e| filter_event_record(&e))
+        .collect::<Vec<FilteredEvent>>();
+
     let json_response = serde_json::json!({
-        "events": events
+        "events": events_response
     });
 
     HttpResponse::Ok().json(json_response)

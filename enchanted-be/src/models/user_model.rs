@@ -80,13 +80,13 @@ pub struct LoginUserSchema {
 pub struct FilteredUser {
     pub email: String,
     pub name: String,
-    pub is_premium: bool,
+    pub isPremium: bool,
     pub role: String,
     pub energy: i16,
     pub coins: i32,
     pub wins: i32,
     pub losses: i32,
-    pub next_claim_energy_time: DateTime<Utc>,
+    pub nextClaimEnergyTime: DateTime<Utc>,
 }
 
 #[derive(Serialize, Debug)]
@@ -109,12 +109,12 @@ pub fn filter_user_record(user: &User) -> FilteredUser {
     FilteredUser {
         email: user.email.to_owned(),
         name: user.name.to_owned(),
-        is_premium: user.is_premium,
+        isPremium: user.is_premium,
         role: user.role.to_string(),
         energy: user.energy,
         coins: user.coins,
         wins: user.wins,
         losses: user.losses,
-        next_claim_energy_time: user.next_claim_energy_time,
+        nextClaimEnergyTime: user.next_claim_energy_time,
     }
 }
