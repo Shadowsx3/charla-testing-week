@@ -2,11 +2,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.bassmd.myenchantedgarden.UserRepository
+import com.bassmd.myenchantedgarden.repo.UserRepository
 import com.bassmd.myenchantedgarden.dto.LoginRequest
-import com.bassmd.myenchantedgarden.dto.RegisterRequest
 import com.bassmd.myenchantedgarden.dto.StatusModel
-import com.bassmd.myenchantedgarden.dto.UserResponse
 
 
 class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {

@@ -2,8 +2,8 @@ package com.bassmd.myenchantedgarden.koin
 
 import LoginViewModel
 import RegisterViewModel
-import com.bassmd.myenchantedgarden.UserRepository
-import com.bassmd.myenchantedgarden.UserRepositoryImpl
+import com.bassmd.myenchantedgarden.repo.UserRepository
+import com.bassmd.myenchantedgarden.repo.UserRepositoryImpl
 import com.bassmd.myenchantedgarden.data.remote.achievements.AchievementsService
 import com.bassmd.myenchantedgarden.data.remote.achievements.AchievementsServiceImpl
 import com.bassmd.myenchantedgarden.data.remote.auth.AuthService

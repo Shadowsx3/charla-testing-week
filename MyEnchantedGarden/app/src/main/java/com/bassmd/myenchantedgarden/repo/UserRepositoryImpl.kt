@@ -1,4 +1,4 @@
-package com.bassmd.myenchantedgarden
+package com.bassmd.myenchantedgarden.repo
 
 import com.bassmd.myenchantedgarden.data.remote.achievements.AchievementsService
 import com.bassmd.myenchantedgarden.data.remote.auth.AuthService

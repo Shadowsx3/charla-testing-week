@@ -37,7 +37,6 @@ pub struct User {
     pub wins: i32,
     pub losses: i32,
     pub next_claim_energy_time: DateTime<Utc>,
-    pub picture_id: i32
 }
 
 impl User {

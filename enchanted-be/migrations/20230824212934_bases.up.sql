@@ -1,15 +1,5 @@
 -- Add up migration script here
 
-insert into pictures (description,file_path) VALUES ('First picture', '1.png');
-insert into pictures (description,file_path) VALUES ('Second picture', '2.png');
-insert into pictures (description,file_path) VALUES ('Third picture', '3.png');
-insert into pictures (description,file_path) VALUES ('Fourth picture', '4.png');
-insert into pictures (description,file_path) VALUES ('Fifth picture', '5.png');
-insert into pictures (description,file_path) VALUES ('Six picture', '6.png');
-insert into pictures (description,file_path) VALUES ('Seven picture', '7.png');
-insert into pictures (description,file_path) VALUES ('Eight picture', '8.png');
-insert into pictures (description,file_path) VALUES ('Nine picture', '9.png');
-
 insert into plants (id, name,description,coins_to_collect,file_path) VALUES (1, 'Plantita', 'NaN', 300, '/plants/1.png');
 insert into plants (id, name,description,coins_to_collect,file_path) VALUES (2, 'Plantita2', 'NN', 1300, '/plants/2.png');
 insert into plants (id, name,description,coins_to_collect,file_path) VALUES (3, 'Plantita3', 'N3N', 3300, '/plants/3.png');

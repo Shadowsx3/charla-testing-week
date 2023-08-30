@@ -38,7 +38,7 @@ async fn register_user_handler(
     let user_id = uuid::Uuid::new_v4().to_string();
     let next_claim = Utc::now();
     let query_result = sqlx::query(
-        r#"INSERT INTO users (id,email,name,role,password,next_claim_energy_time,picture_id) VALUES ($1, $2, $3, $4, $5, $6, 1)"#
+        r#"INSERT INTO users (id,email,name,role,password,next_claim_energy_time) VALUES ($1, $2, $3, $4, $5, $6)"#
     )
         .bind(user_id.to_owned())
         .bind(body.email.to_string().to_lowercase())

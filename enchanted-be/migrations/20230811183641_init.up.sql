@@ -1,13 +1,6 @@
 create extension if not exists "uuid-ossp";
 
 create table
-	if not exists pictures (
-		id serial primary key unique not null,
-		description varchar(255) not null,
-		file_path varchar(255) not null
-);
-
-create table
 	if not exists users (
 		id char(36) not null unique default (uuid_generate_v4()),
 		email varchar(60) not null unique,
@@ -19,9 +12,7 @@ create table
 		coins int not null default 3000,
 		wins int not null default 0,
 		losses int not null default 0,
-		next_claim_energy_time timestamptz not null,
-		picture_id int not null,
-		constraint g_picture_id foreign key (picture_id) references pictures (id)
+		next_claim_energy_time timestamptz not null
 );
 
 create index users_email_idx on users (email);
