@@ -3,6 +3,7 @@ use chrono::Utc;
 use serde_json::json;
 use crate::app_config::AppState;
 use crate::middleware::jwt_auth;
+use crate::models::event_model::{Event, filter_event_record, FilteredEvent};
 use crate::models::store_model::{filter_item_record, FilteredStoreItem, StoreItem, StoreItemRequest};
 use crate::models::user_model::User;
 
@@ -159,6 +160,31 @@ async fn post_buy_item_handler(
     HttpResponse::Ok().json(json_response)
 }
 
+#[get("/events")]
+async fn get_events_handler(
+    data: web::Data<AppState>,
+    _: jwt_auth::JwtMiddleware,
+) -> impl Responder {
+    let events: Vec<Event> = sqlx::query_as!(
+        Event,
+        r#"select * from events order by id"#,
+    )
+        .fetch_all(&data.db)
+        .await
+        .unwrap();
+
+    let events_response = events
+        .into_iter()
+        .map(|e| filter_event_record(&e))
+        .collect::<Vec<FilteredEvent>>();
+
+    let json_response = json!({
+        "events": events_response
+    });
+
+    HttpResponse::Ok().json(json_response)
+}
+
 pub fn get_scope() -> Scope {
     web::scope("/store")
         .app_data(web::JsonConfig::default().error_handler(|err, _| {
@@ -166,4 +192,5 @@ pub fn get_scope() -> Scope {
         }))
         .service(get_store_handler)
         .service(post_buy_item_handler)
+        .service(get_store_handler)
 }

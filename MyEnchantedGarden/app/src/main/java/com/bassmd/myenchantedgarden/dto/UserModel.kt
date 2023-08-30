@@ -1,4 +1,4 @@
-package com.bassmd.myenchantedgarden.data.remote.dto
+package com.bassmd.myenchantedgarden.dto
 
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
@@ -20,4 +20,9 @@ data class UserModel(
 @Serializable
 data class UserResponse(
     val user: UserModel
+)
+
+@Serializable
+data class PlayRequest(
+    val won: Boolean
 )

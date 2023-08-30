@@ -6,6 +6,7 @@ object HttpRoutes {
     const val USER = "$BASE_URL/user"
     const val PLANTS = "$BASE_URL/plants"
     const val STORE = "$BASE_URL/store"
+    const val EVENTS = "$STORE/events"
     const val ACHIEVEMENTS = "$BASE_URL/achievements"
-    const val EVENTS = "$BASE_URL/events"
+
 }

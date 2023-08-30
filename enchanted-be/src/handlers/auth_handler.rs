@@ -61,23 +61,7 @@ async fn register_user_handler(
             .json(json!({"status": "error","message": format!("{:?}", err)}));
     }
 
-    let query_result = sqlx::query_as!(User, r#"SELECT * FROM users WHERE id = $1"#, user_id)
-        .fetch_one(&data.db)
-        .await;
-
-    match query_result {
-        Ok(user) => {
-            let user_response = json!({
-                "user": filter_user_record(&user)
-            });
-
-            return HttpResponse::Ok().json(user_response);
-        }
-        Err(e) => {
-            return HttpResponse::InternalServerError()
-                .json(json!({"status": "error","message": format!("{:?}", e)}));
-        }
-    }
+    HttpResponse::Ok().json(json!({"status": "success"}))
 }
 
 #[post("/login")]

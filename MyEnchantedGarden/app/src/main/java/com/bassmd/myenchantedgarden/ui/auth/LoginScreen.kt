@@ -54,6 +54,17 @@ fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
                 modifier = Modifier
                     .align(Alignment.Center),
             ) {
+                if (viewModel.isLoggedIn) {
+                    Text(
+                        text = viewModel.userName,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(start = 20.dp)
+                            .fillMaxWidth(),
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
                 if (viewModel.isBusy) {
                     CircularProgressIndicator()
                 }

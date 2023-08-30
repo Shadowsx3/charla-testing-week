@@ -1,4 +1,4 @@
-package com.bassmd.myenchantedgarden.data.remote.dto
+package com.bassmd.myenchantedgarden.dto
 
 import kotlinx.serialization.Serializable
 
