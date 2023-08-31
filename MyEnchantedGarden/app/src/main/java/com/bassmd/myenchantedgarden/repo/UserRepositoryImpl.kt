@@ -1,5 +1,14 @@
 package com.bassmd.myenchantedgarden.repo
 
+import android.util.Log
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import com.bassmd.myenchantedgarden.data.remote.achievements.AchievementsService
 import com.bassmd.myenchantedgarden.data.remote.auth.AuthService
 import com.bassmd.myenchantedgarden.data.remote.plants.PlantsService
@@ -17,6 +26,12 @@ import com.bassmd.myenchantedgarden.dto.StatusModel
 import com.bassmd.myenchantedgarden.dto.StoreModel
 import com.bassmd.myenchantedgarden.dto.StoreRequest
 import com.bassmd.myenchantedgarden.dto.UserModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -29,44 +44,42 @@ class UserRepositoryImpl(
     private val storeService: StoreService
 ) : UserRepository {
 
-    private var currentUser: UserModel? = null
+    private val userData = MutableStateFlow<UserModel?>(null)
 
-    private var plants: List<PlantsModel> = listOf()
+    override val currentUser: Flow<UserModel?> = userData
 
-    private var storeItems: List<StoreModel> = listOf()
+    private val plants = MutableStateFlow<List<PlantsModel>>(listOf())
 
-    private var achievements: List<AchievementsModel> = listOf()
+    override val userPlants: Flow<List<PlantsModel>> = plants
+    //override val userPlants: Flow<List<PlantsModel>> = plants.map { p -> p.filter { plant -> plant.isUnlocked } }
+
+    private val storeItems = MutableStateFlow<List<StoreModel>>(listOf())
+
+    override val userStore: Flow<List<StoreModel>> = storeItems.map { sm ->
+        sm.filter {
+            val activeEvents = getActiveEventIds()
+            return@filter it.isAvailable && activeEvents.contains(it.eventId)
+        }
+    }
+
+    private val achievements = MutableStateFlow<List<AchievementsModel>>(listOf())
+
+    override val userAchievements: Flow<List<AchievementsModel>> =
+        achievements.map { p -> p.filter { a -> a.isUnlocked } }
 
     private var events: List<EventModel> = listOf()
 
-    override fun getCurrentUser(): UserModel? {
-        return currentUser
-    }
-
-    override fun getUserPlants(): List<PlantsModel> {
-        return plants.filter { p -> p.isUnlocked }
-    }
-
-    override fun getUserAchievements(): List<AchievementsModel> {
-        return achievements.filter { a -> a.isUnlocked }
-    }
-
     private fun getActiveEventIds(): List<Int> {
-        val today = now().toLocalDateTime(TimeZone.currentSystemDefault())
+        val today = now()
         return events.filter { e -> e.startDate <= today && e.endDate >= today }.map { e -> e.id }
-    }
-
-    override fun getStoreItems(): List<StoreModel> {
-        val activeEvents = getActiveEventIds()
-        return storeItems.filter { s -> s.isAvailable && activeEvents.contains(s.eventId) }
     }
 
     override suspend fun login(loginRequest: LoginRequest): Result<StatusModel> {
         val response = authService.loginUser(loginRequest)
         val newUser = response.getOrNull()
         if (newUser != null) {
-            currentUser = newUser.user
-            return Result.success(StatusModel("success", null))
+            userData.value = newUser.user
+            return Result.success(StatusModel("success"))
         }
         return Result.failure(Error("Users error"))
     }
@@ -74,7 +87,7 @@ class UserRepositoryImpl(
     override suspend fun logOut(): Result<StatusModel> {
         val response = authService.logOut()
         response.onSuccess {
-            currentUser = null
+            userData.value = null
         }
         return response
     }
@@ -87,8 +100,8 @@ class UserRepositoryImpl(
         val response = plantsService.getPlants()
         val newPlants = response.getOrNull()
         if (newPlants != null) {
-            plants = newPlants.plants
-            return Result.success(StatusModel("success", null))
+            plants.value = newPlants.plants
+            return Result.success(StatusModel("success"))
         }
         return Result.failure(Error("Plants error"))
     }
@@ -97,8 +110,8 @@ class UserRepositoryImpl(
         val response = plantsService.collectPlant(plantRequest)
         val newUser = response.getOrNull()
         if (newUser != null) {
-            currentUser = newUser.user
-            return Result.success(StatusModel("success", null))
+            userData.value = newUser.user
+            return Result.success(StatusModel("success"))
         }
         response.onFailure {
             return Result.failure(Error(it.message))
@@ -110,8 +123,8 @@ class UserRepositoryImpl(
         val response = achievementsService.getAchievements()
         val newAchievements = response.getOrNull()
         if (newAchievements != null) {
-            achievements = newAchievements.achievements
-            return Result.success(StatusModel("success", null))
+            achievements.value = newAchievements.achievements
+            return Result.success(StatusModel("success"))
         }
         return Result.failure(Error("Achievements error"))
     }
@@ -120,8 +133,8 @@ class UserRepositoryImpl(
         val response = achievementsService.unlockAchievement(achievementsRequest)
         val newAchievements = response.getOrNull()
         if (newAchievements != null) {
-            achievements = newAchievements.achievements
-            return Result.success(StatusModel("success", null))
+            achievements.value = newAchievements.achievements
+            return Result.success(StatusModel("success"))
         }
         response.onFailure {
             return Result.failure(Error(it.message))
@@ -133,8 +146,8 @@ class UserRepositoryImpl(
         val response = storeService.getStore()
         val newStore = response.getOrNull()
         if (newStore != null) {
-            storeItems = newStore.store
-            return Result.success(StatusModel("success", null))
+            storeItems.value = newStore.store
+            return Result.success(StatusModel("success"))
         }
         return Result.failure(Error("Store error"))
     }
@@ -144,7 +157,7 @@ class UserRepositoryImpl(
         val newEvents = response.getOrNull()
         if (newEvents != null) {
             events = newEvents.events
-            return Result.success(StatusModel("success", null))
+            return Result.success(StatusModel("success"))
         }
         return Result.failure(Error("Events error"))
     }
@@ -153,8 +166,8 @@ class UserRepositoryImpl(
         val response = storeService.buyItem(storeRequest)
         val newStore = response.getOrNull()
         if (newStore != null) {
-            storeItems = newStore.store
-            return Result.success(StatusModel("success", null))
+            storeItems.value = newStore.store
+            return Result.success(StatusModel("success"))
         }
         response.onFailure {
             return Result.failure(Error(it.message))
@@ -166,8 +179,8 @@ class UserRepositoryImpl(
         val response = userService.getProfile()
         val newUser = response.getOrNull()
         if (newUser != null) {
-            currentUser = newUser.user
-            return Result.success(StatusModel("success", null))
+            userData.value = newUser.user
+            return Result.success(StatusModel("success"))
         }
         return Result.failure(Error("User error"))
     }
@@ -176,8 +189,8 @@ class UserRepositoryImpl(
         val response = userService.playGame(playRequest)
         val newUser = response.getOrNull()
         if (newUser != null) {
-            currentUser = newUser.user
-            return Result.success(StatusModel("success", null))
+            userData.value = newUser.user
+            return Result.success(StatusModel("success"))
         }
         response.onFailure {
             return Result.failure(Error(it.message))

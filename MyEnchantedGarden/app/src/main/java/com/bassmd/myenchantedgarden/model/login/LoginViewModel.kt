@@ -1,3 +1,5 @@
+package com.bassmd.myenchantedgarden.model.login
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,7 +12,6 @@ import com.bassmd.myenchantedgarden.dto.StatusModel
 class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
     var isLoggedIn by mutableStateOf(false)
     var isBusy by mutableStateOf(false)
-    var userName by mutableStateOf("")
 
     suspend fun signIn(email: String, password: String) {
         isBusy = true

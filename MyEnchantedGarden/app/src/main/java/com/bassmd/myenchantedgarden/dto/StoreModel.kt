@@ -1,5 +1,6 @@
 package com.bassmd.myenchantedgarden.dto
 
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
@@ -28,8 +29,8 @@ data class StoreRequest(
 data class EventModel(
     val id: Int,
     val name: String,
-    val startDate: LocalDateTime,
-    val endDate: LocalDateTime,
+    val startDate: Instant,
+    val endDate: Instant,
 )
 
 @Serializable

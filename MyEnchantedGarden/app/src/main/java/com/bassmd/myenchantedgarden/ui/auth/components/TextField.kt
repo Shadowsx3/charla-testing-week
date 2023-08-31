@@ -1,4 +1,4 @@
-package com.bassmd.myenchantedgarden.ui.auth
+package com.bassmd.myenchantedgarden.ui.auth.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun SimpleOutlinedTextField(text: String, onChange: (String) -> Unit) {
+fun SimpleOutlinedTextField(defaultText: String, text: String, onChange: (String) -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     OutlinedTextField(
@@ -34,13 +34,13 @@ fun SimpleOutlinedTextField(text: String, onChange: (String) -> Unit) {
         shape = RoundedCornerShape(topEnd = 12.dp, bottomStart = 12.dp),
         label = {
             Text(
-                "Enter Email",
+                defaultText,
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.labelMedium,
             )
         },
         textStyle = MaterialTheme.typography.labelMedium,
-        placeholder = { Text(text = "Enter Email") },
+        placeholder = { Text(text = defaultText) },
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Next,
             keyboardType = KeyboardType.Email

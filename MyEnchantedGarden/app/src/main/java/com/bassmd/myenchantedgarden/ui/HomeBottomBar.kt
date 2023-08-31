@@ -1,9 +1,11 @@
 package com.bassmd.myenchantedgarden.ui
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class HomeBottomBar(
@@ -11,21 +13,21 @@ sealed class HomeBottomBar(
     val title: String,
     val icon: ImageVector
 ) {
-    object Home : HomeBottomBar(
-        route = "HOME",
-        title = "HOME",
-        icon = Icons.Default.Home
+    object Plants : HomeBottomBar(
+        route = "PLANTS",
+        title = "PLANTS",
+        icon = Icons.Default.Favorite
+    )
+
+    object Store : HomeBottomBar(
+        route = "STORE",
+        title = "STORE",
+        icon = Icons.Default.ShoppingCart
     )
 
     object Profile : HomeBottomBar(
         route = "PROFILE",
         title = "PROFILE",
         icon = Icons.Default.Person
-    )
-
-    object Settings : HomeBottomBar(
-        route = "SETTINGS",
-        title = "SETTINGS",
-        icon = Icons.Default.Settings
     )
 }

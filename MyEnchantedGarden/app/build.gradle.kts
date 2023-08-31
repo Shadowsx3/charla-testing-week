@@ -61,8 +61,11 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.navigation:navigation-compose:2.7.0")
+    implementation("androidx.navigation:navigation-compose:2.7.1")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    //long life to livedata
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
     //ktor
     val ktorVersion = "1.6.3"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
@@ -78,7 +81,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.0-alpha04")
     //pagging -> investigate
     implementation("androidx.paging:paging-compose:3.2.0")
-    implementation("androidx.navigation:navigation-compose:2.7.0")
+    implementation("androidx.navigation:navigation-compose:2.7.1")
     implementation("io.coil-kt:coil-compose:2.2.0")
     //Test
     testImplementation("junit:junit:4.13.2")

@@ -1,5 +1,6 @@
 package com.bassmd.myenchantedgarden.repo
 
+import androidx.lifecycle.LiveData
 import com.bassmd.myenchantedgarden.dto.AchievementsModel
 import com.bassmd.myenchantedgarden.dto.AchievementsRequest
 import com.bassmd.myenchantedgarden.dto.AchievementsResponse
@@ -15,8 +16,16 @@ import com.bassmd.myenchantedgarden.dto.StoreRequest
 import com.bassmd.myenchantedgarden.dto.StoreResponse
 import com.bassmd.myenchantedgarden.dto.UserModel
 import com.bassmd.myenchantedgarden.dto.UserResponse
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface UserRepository {
+
+    val currentUser: Flow<UserModel?>
+    val userPlants: Flow<List<PlantsModel>>
+    val userStore: Flow<List<StoreModel>>
+    val userAchievements: Flow<List<AchievementsModel>>
+
     suspend fun login(loginRequest: LoginRequest): Result<StatusModel>
     suspend fun logOut(): Result<StatusModel>
     suspend fun register(registerRequest: RegisterRequest): Result<StatusModel>
@@ -36,11 +45,4 @@ interface UserRepository {
     suspend fun getUser(): Result<StatusModel>
 
     suspend fun playGame(playRequest: PlayRequest): Result<StatusModel>
-    fun getCurrentUser(): UserModel?
-
-    fun getUserPlants(): List<PlantsModel>
-
-    fun getUserAchievements(): List<AchievementsModel>
-
-    fun getStoreItems(): List<StoreModel>
 }

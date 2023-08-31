@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bassmd.myenchantedgarden.ui.auth.LoginScreen
+import com.bassmd.myenchantedgarden.ui.auth.RegisterScreen
 
 fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     navigation(
@@ -13,17 +14,12 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     ) {
         composable(route = AuthScreen.Login.route) {
             LoginScreen(
-
+                navController
             )
         }
         composable(route = AuthScreen.SignUp.route) {
-            LoginScreen(
-
-            )
-        }
-        composable(route = AuthScreen.Forgot.route) {
-            LoginScreen(
-
+            RegisterScreen(
+                navController
             )
         }
     }
@@ -32,5 +28,4 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
 sealed class AuthScreen(val route: String) {
     object Login : AuthScreen(route = "LOGIN")
     object SignUp : AuthScreen(route = "SIGN_UP")
-    object Forgot : AuthScreen(route = "FORGOT")
 }

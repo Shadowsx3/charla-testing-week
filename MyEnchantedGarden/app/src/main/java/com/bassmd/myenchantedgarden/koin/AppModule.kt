@@ -1,7 +1,10 @@
 package com.bassmd.myenchantedgarden.koin
 
-import LoginViewModel
-import RegisterViewModel
+import com.bassmd.myenchantedgarden.model.login.LoginViewModel
+import com.bassmd.myenchantedgarden.model.plants.PlantsViewModel
+import com.bassmd.myenchantedgarden.model.profile.ProfileViewModel
+import com.bassmd.myenchantedgarden.model.register.RegisterViewModel
+import com.bassmd.myenchantedgarden.model.store.StoreViewModel
 import com.bassmd.myenchantedgarden.repo.UserRepository
 import com.bassmd.myenchantedgarden.repo.UserRepositoryImpl
 import com.bassmd.myenchantedgarden.data.remote.achievements.AchievementsService
@@ -28,4 +31,7 @@ val appModule = module {
     single<UserRepository> { UserRepositoryImpl(get(), get(), get(), get(), get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { RegisterViewModel(get()) }
+    viewModel { ProfileViewModel(get()) }
+    viewModel { PlantsViewModel(get()) }
+    viewModel { StoreViewModel(get()) }
 }

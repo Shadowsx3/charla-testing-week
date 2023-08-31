@@ -9,40 +9,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.bassmd.myenchantedgarden.ui.HomeBottomBar
+import com.bassmd.myenchantedgarden.ui.home.PlantsScreen
+import com.bassmd.myenchantedgarden.ui.home.ProfileScreen
+import com.bassmd.myenchantedgarden.ui.home.StoreScreen
 
 @Composable
 fun HomeNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         route = Graph.HOME,
-        startDestination = HomeBottomBar.Home.route
+        startDestination = HomeBottomBar.Plants.route
     ) {
-        composable(route = HomeBottomBar.Home.route) {
-            TextButton(
-                onClick = {
-                    navController.navigate(Graph.HOME)
-                }
-            ){
-                Text(text = HomeBottomBar.Home.route,)
-            }
+        composable(route = HomeBottomBar.Plants.route) {
+            PlantsScreen(navController)
+        }
+        composable(route = HomeBottomBar.Store.route) {
+            StoreScreen(navController)
         }
         composable(route = HomeBottomBar.Profile.route) {
-            TextButton(
-                onClick = {
-                    navController.navigate(Graph.HOME)
-                }
-            ){
-                Text(text = HomeBottomBar.Profile.route,)
-            }
-        }
-        composable(route = HomeBottomBar.Settings.route) {
-            TextButton(
-                onClick = {
-                    navController.navigate(Graph.HOME)
-                }
-            ){
-                Text(text = HomeBottomBar.Settings.route,)
-            }
+            ProfileScreen(navController)
         }/*
         detailsNavGraph(navController = navController)*/
     }

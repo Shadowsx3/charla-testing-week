@@ -1,7 +1,9 @@
 package com.bassmd.myenchantedgarden.dto
 
-import kotlinx.datetime.LocalDateTime
+import com.bassmd.myenchantedgarden.R
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
+
 
 @Serializable
 data class PlantsModel(
@@ -11,7 +13,7 @@ data class PlantsModel(
     val coinsToCollect: Int,
     val filePath: String,
     val isUnlocked: Boolean,
-    val nextCollectTime: LocalDateTime
+    val nextCollectTime: Instant
 )
 
 
@@ -24,3 +26,12 @@ data class PlantsResponse(
 data class PlantRequest(
     val id: Int
 )
+
+fun getPlantImages(filePath: String): Int {
+    when (filePath) {
+        "rosa" -> return R.drawable.plants
+        "verde" -> return R.drawable.plants
+        "aaa" -> return R.drawable.plants
+    }
+    return 0
+}

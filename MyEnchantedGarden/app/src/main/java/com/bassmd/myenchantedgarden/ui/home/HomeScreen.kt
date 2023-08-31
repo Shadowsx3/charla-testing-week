@@ -1,10 +1,12 @@
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.NavigationBar
@@ -37,17 +39,22 @@ import com.bassmd.myenchantedgarden.ui.theme.MyEnchantedGardenTheme
 fun HomeScreen(navController: NavHostController = rememberNavController()) {
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
-    ) {
-        HomeNavGraph(navController = navController)
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+        ) {
+            HomeNavGraph(navController = navController)
+        }
     }
 }
 
 @Composable
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(
-        HomeBottomBar.Home,
+        HomeBottomBar.Plants,
+        HomeBottomBar.Store,
         HomeBottomBar.Profile,
-        HomeBottomBar.Settings,
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination

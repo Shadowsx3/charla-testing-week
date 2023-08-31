@@ -1,4 +1,4 @@
-package com.bassmd.myenchantedgarden.ui.auth
+package com.bassmd.myenchantedgarden.ui.auth.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -27,7 +27,6 @@ fun GradientButton(
     roundedCornerShape: RoundedCornerShape,
     onClick: () -> Unit
 ) {
-
     Button(
         modifier = Modifier
             .fillMaxWidth()

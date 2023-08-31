@@ -1,6 +1,6 @@
 package com.bassmd.myenchantedgarden.ui.auth
 
-import LoginViewModel
+import com.bassmd.myenchantedgarden.model.login.LoginViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,13 +27,23 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.bassmd.myenchantedgarden.R
+import com.bassmd.myenchantedgarden.graphs.AuthScreen
+import com.bassmd.myenchantedgarden.graphs.Graph
+import com.bassmd.myenchantedgarden.koin.appModule
+import com.bassmd.myenchantedgarden.ui.auth.components.GradientButton
+import com.bassmd.myenchantedgarden.ui.auth.components.SimpleOutlinedPasswordTextField
+import com.bassmd.myenchantedgarden.ui.auth.components.SimpleOutlinedTextField
 import com.bassmd.myenchantedgarden.ui.theme.MyEnchantedGardenTheme
 import kotlinx.coroutines.launch
+import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.context.startKoin
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
+fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = koinViewModel()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
@@ -48,23 +58,12 @@ fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
     ) {
         Box(
             modifier = Modifier
-                .align(Alignment.Center),
+                .align(Alignment.TopCenter),
         ) {
             Box(
                 modifier = Modifier
                     .align(Alignment.Center),
             ) {
-                if (viewModel.isLoggedIn) {
-                    Text(
-                        text = viewModel.userName,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .padding(start = 20.dp)
-                            .fillMaxWidth(),
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                }
                 if (viewModel.isBusy) {
                     CircularProgressIndicator()
                 }
@@ -81,12 +80,12 @@ fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
                     text = "🌺\nMy Enchanted Garden",
                     textAlign = TextAlign.Center,
                     modifier = Modifier
-                        .padding(start = 20.dp)
+                        .padding(top = 40.dp)
                         .fillMaxWidth(),
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary,
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(20.dp))
                 Image(
                     painter = painterResource(id = R.drawable.plants),
                     contentDescription = null,
@@ -94,7 +93,7 @@ fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
                     modifier = Modifier
                         .fillMaxWidth(),
                 )
-                Spacer(modifier = Modifier.height(70.dp))
+                Spacer(modifier = Modifier.height(40.dp))
                 Text(
                     text = "Sign In",
                     textAlign = TextAlign.Center,
@@ -105,7 +104,7 @@ fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
                     color = MaterialTheme.colorScheme.primary,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                SimpleOutlinedTextField(email) { email = it }
+                SimpleOutlinedTextField("Enter Email", email) { email = it }
 
                 Spacer(modifier = Modifier.padding(3.dp))
                 SimpleOutlinedPasswordTextField(password) { password = it }
@@ -124,27 +123,22 @@ fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
                     onClick = {
                         coroutineScope.launch {
                             viewModel.signIn(email, password)
+                            if (viewModel.isLoggedIn) {
+                                navController.navigate(Graph.HOME)
+                            }
                         }
                     }
                 )
                 TextButton(
-                    modifier = Modifier.padding(start = 15.dp, end = 1.dp),
-                    onClick = {},
+                    modifier = Modifier.padding(start = 15.dp, end = 10.dp),
+                    onClick = {
+                        navController.navigate(AuthScreen.SignUp.route)
+                    },
                 ) {
                     Text(
                         text = "Create An Account",
                         letterSpacing = 1.sp,
                         style = MaterialTheme.typography.labelLarge
-                    )
-                }
-                TextButton(
-                    modifier = Modifier.padding(start = 1.dp),
-                    onClick = {},
-                ) {
-                    Text(
-                        text = "Reset Password",
-                        letterSpacing = 1.sp,
-                        style = MaterialTheme.typography.labelLarge,
                     )
                 }
 
@@ -166,7 +160,11 @@ fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
 )
 @Composable
 private fun PreviewLoginScreen() {
+    startKoin{
+        androidLogger()
+        modules(appModule)
+    }
     MyEnchantedGardenTheme(dynamicColor = false) {
-        LoginScreen()
+        LoginScreen(rememberNavController())
     }
 }
