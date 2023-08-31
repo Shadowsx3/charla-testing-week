@@ -39,10 +39,10 @@ class UserRepositoryImpl(
 
     private val plants = MutableStateFlow<List<PlantsModel>>(listOf())
 
-    val allPlants: Flow<List<PlantsModel>> = plants
-
-    override val userPlants: Flow<List<PlantsModel>> =
+    /*override val userPlants: Flow<List<PlantsModel>> =
         plants.map { p -> p.filter { plant -> plant.isUnlocked } }
+*/
+    override val userPlants: Flow<List<PlantsModel>> = plants
 
     private val storeItems = MutableStateFlow<List<StoreItem>>(listOf())
 

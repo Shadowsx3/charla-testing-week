@@ -29,9 +29,18 @@ data class PlantRequest(
 
 fun getPlantImages(filePath: String): Int {
     when (filePath) {
-        "rosa" -> return R.drawable.plants
-        "verde" -> return R.drawable.plants
-        "aaa" -> return R.drawable.plants
+        "bamboo" -> return R.drawable.bamboo
+        "cactus" -> return R.drawable.cactus
+        "coffee_beans" -> return R.drawable.coffee_beans
+        "leaf" -> return R.drawable.leaf
+        "mushroom" -> return R.drawable.mushroom
+        "plant_alone" -> return R.drawable.plant_alone
+        "pumpkin" -> return R.drawable.pumpkin
+        "rose" -> return R.drawable.rose
+        "sunflower" -> return R.drawable.sunflower
+        "tulip" -> return R.drawable.tulip
+        "waterlily" -> return R.drawable.waterlily
+        "wheat" -> return R.drawable.wheat
     }
     return 0
 }

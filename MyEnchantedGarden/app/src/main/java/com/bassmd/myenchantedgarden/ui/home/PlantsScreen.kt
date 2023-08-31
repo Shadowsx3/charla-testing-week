@@ -3,6 +3,7 @@ package com.bassmd.myenchantedgarden.ui.home
 import com.bassmd.myenchantedgarden.model.plants.PlantsViewModel
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -159,10 +161,16 @@ fun PlantsScreen(
             ) {
                 Card(
                     modifier = Modifier
-                        .padding(top = 10.dp, start = 10.dp, end = 10.dp)
+                        .padding(start = 10.dp, end = 10.dp)
                         .fillMaxWidth()
                         .wrapContentHeight(),
-                    shape = MaterialTheme.shapes.medium,
+                    shape = MaterialTheme.shapes.medium.copy(
+                        topEnd = CornerSize(0.dp),
+                        topStart = CornerSize(0.dp),
+                        bottomStart = CornerSize(16.dp),
+                        bottomEnd = CornerSize(16.dp)
+                    ),
+                    border = BorderStroke(width = 2.dp, color = Color.Black),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     ),

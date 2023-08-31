@@ -1,6 +1,7 @@
 package com.bassmd.myenchantedgarden.ui.home.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -63,57 +64,65 @@ fun PlantItem(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
         ),
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally),
         ) {
-            Image(
-                painter = painterResource(
-                    id = getPlantImages(plantsModel.filePath)
-                ),
-                contentDescription = plantsModel.filePath,
-                modifier = Modifier
-                    .size(130.dp)
-                    .padding(10.dp),
-                contentScale = ContentScale.Fit,
-            )
-            Column(
-                Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-                    .align(Alignment.Top),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
             ) {
                 Text(
-                    modifier = Modifier.padding(vertical = 3.dp),
+                    modifier = Modifier.padding(vertical = 3.dp).weight(1f),
                     text = plantsModel.name,
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center
                 )
-                Text(
-                    modifier = Modifier.padding(vertical = 3.dp),
-                    text = plantsModel.description,
-                    style = MaterialTheme.typography.bodyLarge,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    modifier = Modifier.padding(vertical = 3.dp),
-                    text = "Coins: ${plantsModel.coinsToCollect}",
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-                Text(
-                    text = "Next collect in: $nextCollectText",
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-                Box(
+                Button(modifier = Modifier.padding(horizontal = 10.dp), onClick = { onClick(plantsModel.id) }, enabled = canCollect) {
+                    Text(
+                        text = "Collect",
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    painter = painterResource(
+                        id = getPlantImages(plantsModel.filePath)
+                    ),
+                    contentDescription = plantsModel.filePath,
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
+                        .size(130.dp)
+                        .padding(10.dp),
+                    contentScale = ContentScale.Fit,
+                )
+                Column(
+                    Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                        .align(Alignment.Top),
                 ) {
-                    Button(onClick = { onClick(plantsModel.id) }, enabled = canCollect) {
-                        Text(
-                            text = "Collect",
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
-                    }
+                    Text(
+                        modifier = Modifier.padding(vertical = 3.dp),
+                        text = plantsModel.description,
+                        style = MaterialTheme.typography.bodyLarge,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        modifier = Modifier.padding(vertical = 3.dp),
+                        text = "Coins: ${plantsModel.coinsToCollect}",
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                    Text(
+                        text = "Next collect in: $nextCollectText",
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
                 }
             }
         }
@@ -133,7 +142,7 @@ private fun PreviewLoginScreen() {
                 "Holiss",
                 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                 15,
-                "rosa",
+                "cactus",
                 true,
                 now().plus(2.minutes).plus(3.seconds)
             ), now()

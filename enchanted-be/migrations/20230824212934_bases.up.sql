@@ -1,10 +1,18 @@
 -- Add up migration script here
 
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (1, 'Plantita', 'NaN', 300, 'rosa');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (2, 'Plantita2', 'NN', 1300, 'rosa');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (3, 'Plantita3', 'N3N', 3300, 'rosa');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (4, 'Plantita4', 'N4N', 50, 'rosa');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (5, 'Goldi', 'NaN5', 9999, 'rosa');
+insert into plants (id, name,description,coins_to_collect,file_path) VALUES (1, 'Bamboo', 'NaN', 300, 'bamboo');
+insert into plants (id, name,description,coins_to_collect,file_path) VALUES (2, 'Cactus', 'NN', 1300, 'cactus');
+insert into plants (id, name,description,coins_to_collect,file_path) VALUES (4, 'Coffee beans', 'N4N', 50, 'coffee_beans');
+insert into plants (id, name,description,coins_to_collect,file_path) VALUES (5, 'Leaf', 'NaN5', 9999, 'leaf');
+insert into plants (id, name,description,coins_to_collect,file_path) VALUES (7, 'Mushroom', 'NN', 1300, 'mushroom');
+insert into plants (id, name,description,coins_to_collect,file_path) VALUES (8, 'Plant', 'N3N', 3300, 'plant_alone');
+insert into plants (id, name,description,coins_to_collect,file_path) VALUES (9, 'Pumpkin', 'N4N', 50, 'pumpkin');
+insert into plants (id, name,description,coins_to_collect,file_path) VALUES (10, 'Rose', 'NaN5', 9999, 'rose');
+insert into plants (id, name,description,coins_to_collect,file_path) VALUES (11, 'Sunflower', 'NaN', 300, 'sunflower');
+insert into plants (id, name,description,coins_to_collect,file_path) VALUES (12, 'Tulip', 'NN', 1300, 'tulip');
+insert into plants (id, name,description,coins_to_collect,file_path) VALUES (3, 'Waterlily', 'N3N', 3300, 'waterlily');
+insert into plants (id, name,description,coins_to_collect,file_path) VALUES (6, 'Wheat', 'N4N', 50, 'wheat');
+
 
 insert into achievements (id, name,description,code,file_path,plants_id) VALUES (1, 'Wow, that is a session', 'Idk, just it, thanks', 'LOG1N', '/achievements/1.png',1);
 insert into achievements (id, name,description,code,file_path,plants_id) VALUES (2, 'Click on profile', 'Idk, just it, thanks', 'PROF1LE', '/achievements/2.png',2);
