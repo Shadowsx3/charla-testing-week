@@ -50,8 +50,7 @@ class UserRepositoryImpl(
 
     private val plants = MutableStateFlow<List<PlantsModel>>(listOf())
 
-    override val userPlants: Flow<List<PlantsModel>> = plants
-    //override val userPlants: Flow<List<PlantsModel>> = plants.map { p -> p.filter { plant -> plant.isUnlocked } }
+    override val userPlants: Flow<List<PlantsModel>> = plants.map { p -> p.filter { plant -> plant.isUnlocked } }
 
     private val storeItems = MutableStateFlow<List<StoreModel>>(listOf())
 
@@ -111,7 +110,7 @@ class UserRepositoryImpl(
         val newUser = response.getOrNull()
         if (newUser != null) {
             userData.value = newUser.user
-            return Result.success(StatusModel("success"))
+            return getPlants()
         }
         response.onFailure {
             return Result.failure(Error(it.message))

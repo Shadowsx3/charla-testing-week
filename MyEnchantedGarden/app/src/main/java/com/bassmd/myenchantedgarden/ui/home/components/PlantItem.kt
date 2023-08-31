@@ -8,16 +8,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,18 +34,31 @@ import com.bassmd.myenchantedgarden.koin.appModule
 import com.bassmd.myenchantedgarden.ui.auth.RegisterScreen
 import com.bassmd.myenchantedgarden.ui.theme.MyEnchantedGardenTheme
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Clock.System.now
+import kotlinx.datetime.Instant
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 
 @Composable
 fun PlantItem(
     plantsModel: PlantsModel,
-    onClick: () -> Unit
+    currentTime: Instant,
+    onClick: (Int) -> Unit
 ) {
+    val nextCollect = plantsModel.nextCollectTime - currentTime
+    val canCollect = (plantsModel.nextCollectTime - currentTime).inWholeMilliseconds <= 0
+
     Card(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(8.dp)
             .fillMaxWidth()
             .wrapContentHeight(),
         shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        ),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -52,24 +70,47 @@ fun PlantItem(
                 contentDescription = plantsModel.filePath,
                 modifier = Modifier
                     .size(130.dp)
-                    .padding(8.dp),
+                    .padding(10.dp),
                 contentScale = ContentScale.Fit,
             )
             Column(
                 Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
-                    .align(Alignment.Top)
+                    .align(Alignment.Top),
             ) {
                 Text(
+                    modifier = Modifier.padding(vertical = 3.dp),
                     text = plantsModel.name,
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center
                 )
                 Text(
+                    modifier = Modifier.padding(vertical = 3.dp),
                     text = plantsModel.description,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyLarge,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
                 )
+                Text(
+                    modifier = Modifier.padding(vertical = 3.dp),
+                    text = "Coins: ${plantsModel.coinsToCollect}",
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+                if (canCollect) {
+                    Button(onClick = { onClick(plantsModel.id) }) {
+                        Text(
+                            text = "Collect",
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                    }
+                } else {
+                    Text(
+                        text = "Next collect in: ${nextCollect.inWholeMinutes}m${nextCollect.inWholeSeconds - nextCollect.inWholeMinutes * 60}s",
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+
             }
         }
     }
@@ -90,8 +131,8 @@ private fun PreviewLoginScreen() {
                 15,
                 "rosa",
                 true,
-                Clock.System.now()
-            )
+                now().plus(2.minutes).plus(3.seconds)
+            ), now()
         ) {}
     }
 }

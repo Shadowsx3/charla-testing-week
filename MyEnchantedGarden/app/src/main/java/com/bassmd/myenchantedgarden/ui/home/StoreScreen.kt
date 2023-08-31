@@ -48,7 +48,7 @@ fun StoreScreen(
                         color = MaterialTheme.colorScheme.primary,
                     )
                 }, colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(10.dp)
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
             )
         },

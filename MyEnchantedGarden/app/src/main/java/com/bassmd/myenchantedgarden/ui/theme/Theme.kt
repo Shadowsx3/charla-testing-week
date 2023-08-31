@@ -28,7 +28,7 @@ private val LightColorScheme = lightColorScheme(
     primaryContainer = Lime80,
     secondaryContainer = Lime80,
     tertiaryContainer = Lime80,
-
+    surfaceVariant = LimeGray
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),
