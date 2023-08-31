@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.bassmd.myenchantedgarden.R
 import com.bassmd.myenchantedgarden.dto.PlantsModel
+import com.bassmd.myenchantedgarden.dto.StoreModel
 import com.bassmd.myenchantedgarden.dto.getPlantImages
 import com.bassmd.myenchantedgarden.koin.appModule
 import com.bassmd.myenchantedgarden.ui.auth.RegisterScreen
@@ -43,16 +44,12 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
 @Composable
-fun PlantItem(
-    plantsModel: PlantsModel,
-    currentTime: Instant,
-    onClick: (Int) -> Unit
+fun StoreItem(
+    storeModel: StoreModel,
+    coins: Int,
+    onClick: (Int) -> Unit,
 ) {
-    val nextCollect = plantsModel.nextCollectTime - currentTime
-    val canCollect = (plantsModel.nextCollectTime - currentTime).inWholeMilliseconds <= 0
-    val nextCollectText =
-        if (canCollect) "now" else "${nextCollect.inWholeMinutes}m${nextCollect.inWholeSeconds - nextCollect.inWholeMinutes * 60}s"
-
+    val state = if (storeModel.isAvailable) "Buy" else "Owned"
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -60,7 +57,7 @@ fun PlantItem(
             .wrapContentHeight(),
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
         ),
     ) {
         Row(
@@ -68,9 +65,9 @@ fun PlantItem(
         ) {
             Image(
                 painter = painterResource(
-                    id = getPlantImages(plantsModel.filePath)
+                    id = getPlantImages(storeModel.plantFile)
                 ),
-                contentDescription = plantsModel.filePath,
+                contentDescription = storeModel.plantFile,
                 modifier = Modifier
                     .size(130.dp)
                     .padding(10.dp),
@@ -84,33 +81,31 @@ fun PlantItem(
             ) {
                 Text(
                     modifier = Modifier.padding(vertical = 3.dp),
-                    text = plantsModel.name,
+                    text = storeModel.name,
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center
                 )
                 Text(
                     modifier = Modifier.padding(vertical = 3.dp),
-                    text = plantsModel.description,
+                    text = storeModel.description,
                     style = MaterialTheme.typography.bodyLarge,
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     modifier = Modifier.padding(vertical = 3.dp),
-                    text = "Coins: ${plantsModel.coinsToCollect}",
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-                Text(
-                    text = "Next collect in: $nextCollectText",
+                    text = "Cost: ${storeModel.cost}",
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 Box(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                 ) {
-                    Button(onClick = { onClick(plantsModel.id) }, enabled = canCollect) {
+                    Button(
+                        onClick = { onClick(storeModel.id) },
+                        enabled = storeModel.isAvailable && storeModel.cost <= coins
+                    ) {
                         Text(
-                            text = "Collect",
+                            text = state,
                             style = MaterialTheme.typography.bodyLarge,
                         )
                     }
@@ -121,22 +116,20 @@ fun PlantItem(
 }
 
 @Preview(
-    "Home list detail screen",
-    showBackground = true
+    "Home list detail screen", showBackground = true
 )
 @Composable
 private fun PreviewLoginScreen() {
     MyEnchantedGardenTheme(dynamicColor = false) {
-        PlantItem(
-            PlantsModel(
+        StoreItem(
+            StoreModel(
                 id = 1,
-                "Holiss",
+                500,
+                "Pasas de uva",
                 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                15,
                 "rosa",
                 true,
-                now().plus(2.minutes).plus(3.seconds)
-            ), now()
+            ), 0
         ) {}
     }
 }

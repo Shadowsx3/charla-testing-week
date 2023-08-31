@@ -1,5 +1,6 @@
 package com.bassmd.myenchantedgarden.dto
 
+import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
@@ -26,3 +27,5 @@ data class UserResponse(
 data class PlayRequest(
     val won: Boolean
 )
+
+val defaultUser = UserModel("","",false,"",0,0,0,0,now())

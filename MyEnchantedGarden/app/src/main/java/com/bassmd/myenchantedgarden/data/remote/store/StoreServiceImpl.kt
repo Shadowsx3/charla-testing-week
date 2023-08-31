@@ -41,7 +41,7 @@ class StoreServiceImpl(private val client: HttpClient): StoreService {
     override suspend fun buyItem(storeRequest: StoreRequest): Result<StoreResponse> {
         return try {
             Result.success(client.post {
-                url(HttpRoutes.STORE)
+                url("${HttpRoutes.STORE}/buy")
                 contentType(ContentType.Application.Json)
                 body = storeRequest
             })

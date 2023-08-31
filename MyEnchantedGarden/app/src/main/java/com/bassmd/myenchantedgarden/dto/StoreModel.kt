@@ -1,23 +1,32 @@
 package com.bassmd.myenchantedgarden.dto
 
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class StoreModel(
     val id: Int,
     val cost: Int,
+    val name: String,
+    val description: String,
+    val plantFile: String,
+    val isAvailable: Boolean,
+)
+@Serializable
+data class StoreItem(
+    val id: Int,
+    val cost: Int,
+    val name: String,
     val description: String,
     val eventId: Int,
     val plantId: Int,
-    val wasPurchased: Int,
+    val wasPurchased: Boolean,
     val isAvailable: Boolean,
 )
 
 @Serializable
 data class StoreResponse(
-    val store: List<StoreModel>
+    val store: List<StoreItem>
 )
 
 @Serializable
@@ -37,3 +46,4 @@ data class EventModel(
 data class EventResponse(
     val events: List<EventModel>
 )
+

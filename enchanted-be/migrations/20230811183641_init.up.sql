@@ -72,6 +72,7 @@ create table
     if not exists store_items (
         id serial primary key not null unique,
         cost int not null,
+        name varchar(60) not null,
         description varchar(255) not null,
         event_id int not null,
         plant_id int not null,

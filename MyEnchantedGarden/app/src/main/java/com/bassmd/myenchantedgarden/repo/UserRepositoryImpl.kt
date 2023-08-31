@@ -1,14 +1,5 @@
 package com.bassmd.myenchantedgarden.repo
 
-import android.util.Log
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
-import androidx.lifecycle.switchMap
 import com.bassmd.myenchantedgarden.data.remote.achievements.AchievementsService
 import com.bassmd.myenchantedgarden.data.remote.auth.AuthService
 import com.bassmd.myenchantedgarden.data.remote.plants.PlantsService
@@ -23,18 +14,16 @@ import com.bassmd.myenchantedgarden.dto.PlantsModel
 import com.bassmd.myenchantedgarden.dto.PlayRequest
 import com.bassmd.myenchantedgarden.dto.RegisterRequest
 import com.bassmd.myenchantedgarden.dto.StatusModel
+import com.bassmd.myenchantedgarden.dto.StoreItem
 import com.bassmd.myenchantedgarden.dto.StoreModel
 import com.bassmd.myenchantedgarden.dto.StoreRequest
 import com.bassmd.myenchantedgarden.dto.UserModel
+import com.bassmd.myenchantedgarden.dto.defaultUser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock.System.now
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 class UserRepositoryImpl(
     private val authService: AuthService,
@@ -44,20 +33,32 @@ class UserRepositoryImpl(
     private val storeService: StoreService
 ) : UserRepository {
 
-    private val userData = MutableStateFlow<UserModel?>(null)
+    private val userData = MutableStateFlow(defaultUser)
 
-    override val currentUser: Flow<UserModel?> = userData
+    override val currentUser: Flow<UserModel> = userData
 
     private val plants = MutableStateFlow<List<PlantsModel>>(listOf())
 
-    override val userPlants: Flow<List<PlantsModel>> = plants.map { p -> p.filter { plant -> plant.isUnlocked } }
+    val allPlants: Flow<List<PlantsModel>> = plants
 
-    private val storeItems = MutableStateFlow<List<StoreModel>>(listOf())
+    override val userPlants: Flow<List<PlantsModel>> =
+        plants.map { p -> p.filter { plant -> plant.isUnlocked } }
 
-    override val userStore: Flow<List<StoreModel>> = storeItems.map { sm ->
-        sm.filter {
-            val activeEvents = getActiveEventIds()
-            return@filter it.isAvailable && activeEvents.contains(it.eventId)
+    private val storeItems = MutableStateFlow<List<StoreItem>>(listOf())
+
+    override val userStore: Flow<List<StoreModel>> = storeItems.map {
+        val activeEvents = getActiveEventIds()
+        return@map it.filter { s ->
+            activeEvents.contains(s.eventId)
+        }.map { si ->
+            StoreModel(
+                si.id,
+                si.cost,
+                si.name,
+                si.description,
+                plants.value.first { p -> p.id == si.plantId }.filePath,
+                si.isAvailable
+            )
         }
     }
 
@@ -86,7 +87,7 @@ class UserRepositoryImpl(
     override suspend fun logOut(): Result<StatusModel> {
         val response = authService.logOut()
         response.onSuccess {
-            userData.value = null
+            userData.value = defaultUser
         }
         return response
     }
@@ -133,6 +134,9 @@ class UserRepositoryImpl(
         val newAchievements = response.getOrNull()
         if (newAchievements != null) {
             achievements.value = newAchievements.achievements
+            getUser()
+            getPlants()
+            getStore()
             return Result.success(StatusModel("success"))
         }
         response.onFailure {
@@ -166,7 +170,8 @@ class UserRepositoryImpl(
         val newStore = response.getOrNull()
         if (newStore != null) {
             storeItems.value = newStore.store
-            return Result.success(StatusModel("success"))
+            getUser()
+            return getPlants()
         }
         response.onFailure {
             return Result.failure(Error(it.message))

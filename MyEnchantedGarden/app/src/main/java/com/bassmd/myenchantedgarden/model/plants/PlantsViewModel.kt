@@ -19,6 +19,7 @@ import kotlinx.datetime.Instant
 
 class PlantsViewModel(private val userRepository: UserRepository) : ViewModel() {
     val userPlants = userRepository.userPlants
+    val currentUser = userRepository.currentUser
     var currentTime by mutableStateOf(now())
 
     suspend fun updatePlants() {

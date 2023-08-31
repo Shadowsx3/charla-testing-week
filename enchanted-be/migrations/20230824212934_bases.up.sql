@@ -18,15 +18,10 @@ insert into events (id,name,start_date,end_date) VALUES (1, 'ALWAYS', '2016-06-2
 insert into events (id,name,start_date,end_date) VALUES (2, 'HallOWin', '2022-06-22 00:00:00-03', '2031-06-22 19:10:25-07');
 
 
-insert into store_items (id,cost,description,event_id,plant_id) VALUES (1, 100, 'Plantitas con cosas', 1,1);
-insert into store_items (id,cost,description,event_id,plant_id) VALUES (2, 100, 'Caro', 1,4);
-insert into store_items (id,cost,description,event_id,plant_id) VALUES (3, 1000, 'PackHall', 2,5);
-insert into store_items (id,cost,description,event_id,plant_id) VALUES (4, 1000, 'Caro2', 1,4);
+insert into store_items (id,cost,name,description,event_id,plant_id) VALUES (1, 100, 'Plantitas con cosas','Woooow, sirve', 1,1);
+insert into store_items (id,cost,name,description,event_id,plant_id) VALUES (2, 100, 'Caro','Woooow, sirve', 1,4);
+insert into store_items (id,cost,name,description,event_id,plant_id) VALUES (3, 1000, 'PackHall','Woooow, sirve', 2,5);
+insert into store_items (id,cost,name,description,event_id,plant_id) VALUES (4, 1000, 'Caro2','Woooow, sirve', 1,4);
 
 INSERT INTO users (id,email,name,role,password,next_claim_energy_time) VALUES ('d114ae53-b841-4053-9d2c-cfcffbfaadd4', 'a', 'a', 'User', '$argon2id$v=19$m=19456,t=2,p=1$ISVS9jnSynRhBOXdegt61Q$N4+TsK8Y3EVwuSjryiGK/gILTakS+5o7sZiNZnZK3sY', now());
 
-insert into users_plants (user_id,plants_id,next_collect_time) VALUES ('d114ae53-b841-4053-9d2c-cfcffbfaadd4', 1, now());
-insert into users_plants (user_id,plants_id,next_collect_time) VALUES ('d114ae53-b841-4053-9d2c-cfcffbfaadd4', 2, now());
-insert into users_plants (user_id,plants_id,next_collect_time) VALUES ('d114ae53-b841-4053-9d2c-cfcffbfaadd4', 3, now());
-insert into users_plants (user_id,plants_id,next_collect_time) VALUES ('d114ae53-b841-4053-9d2c-cfcffbfaadd4', 4, now());
-insert into users_plants (user_id,plants_id,next_collect_time) VALUES ('d114ae53-b841-4053-9d2c-cfcffbfaadd4', 5, now());

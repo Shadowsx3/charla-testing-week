@@ -193,4 +193,5 @@ pub fn get_scope() -> Scope {
         .service(get_store_handler)
         .service(post_buy_item_handler)
         .service(get_store_handler)
+        .service(get_events_handler)
 }
