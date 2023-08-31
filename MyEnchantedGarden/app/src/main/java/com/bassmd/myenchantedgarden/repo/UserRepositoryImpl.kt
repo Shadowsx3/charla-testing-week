@@ -1,5 +1,6 @@
 package com.bassmd.myenchantedgarden.repo
 
+import android.util.Log
 import com.bassmd.myenchantedgarden.data.remote.achievements.AchievementsService
 import com.bassmd.myenchantedgarden.data.remote.auth.AuthService
 import com.bassmd.myenchantedgarden.data.remote.plants.PlantsService
@@ -39,10 +40,8 @@ class UserRepositoryImpl(
 
     private val plants = MutableStateFlow<List<PlantsModel>>(listOf())
 
-    /*override val userPlants: Flow<List<PlantsModel>> =
+    override val userPlants: Flow<List<PlantsModel>> =
         plants.map { p -> p.filter { plant -> plant.isUnlocked } }
-*/
-    override val userPlants: Flow<List<PlantsModel>> = plants
 
     private val storeItems = MutableStateFlow<List<StoreItem>>(listOf())
 

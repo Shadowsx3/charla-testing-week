@@ -34,7 +34,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ProfileScreen(
     navController: NavHostController = rememberNavController(),
-    profileViewModel: ProfileViewModel = koinViewModel()
+    viewModel: ProfileViewModel = koinViewModel()
 ) {
     val openDialog = remember { mutableStateOf(false) }
 

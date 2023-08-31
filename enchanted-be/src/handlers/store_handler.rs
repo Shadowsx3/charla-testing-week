@@ -149,6 +149,9 @@ async fn post_buy_item_handler(
                     new_item.is_available = false;
                     new_item.was_purchased = true;
                 }
+                if new_item.plant_id == item.plant_id {
+                    new_item.is_available = false;
+                }
                 filter_item_record(&new_item)
             }
         ).collect::<Vec<FilteredStoreItem>>();

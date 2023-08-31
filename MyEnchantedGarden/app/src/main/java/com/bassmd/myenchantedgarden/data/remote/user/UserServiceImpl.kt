@@ -14,7 +14,7 @@ class UserServiceImpl(private val client: HttpClient): UserService {
     override suspend fun getProfile(): Result<UserResponse> {
         return try {
             Result.success(client.get {
-                url(HttpRoutes.USER)
+                url("${HttpRoutes.USER}/me")
                 contentType(ContentType.Application.Json)
             })
         } catch (e: Exception) {

@@ -19,8 +19,7 @@ async fn get_plants_handler(
     select plants.*,
     (user_id is not null) as is_unlocked,
     COALESCE(next_collect_time,now()) as next_collect_time
-    from plants left join users_plants on plants.id = users_plants.plants_id
-    where user_id is NULL or user_id = $1
+    from plants left join users_plants on plants.id = users_plants.plants_id and (user_id is NULL or user_id = $1)
     order by plants.id"#)
         .bind(user_id)
         .fetch_all(&data.db)
