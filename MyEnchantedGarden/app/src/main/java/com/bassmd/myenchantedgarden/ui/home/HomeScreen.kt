@@ -36,7 +36,8 @@ import com.bassmd.myenchantedgarden.ui.theme.MyEnchantedGardenTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavHostController = rememberNavController()) {
+fun HomeScreen(oldNavController: NavHostController) {
+    val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) { innerPadding ->
@@ -44,7 +45,7 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            HomeNavGraph(navController = navController)
+            HomeNavGraph(navController = navController, oldNavHostController = oldNavController)
         }
     }
 }
@@ -105,6 +106,6 @@ fun RowScope.AddItem(
 @Composable
 private fun PreviewHomeScreen() {
     MyEnchantedGardenTheme {
-        HomeScreen()
+        HomeScreen(rememberNavController())
     }
 }

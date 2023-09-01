@@ -42,5 +42,5 @@ fun getPlantImages(filePath: String): Int {
         "waterlily" -> return R.drawable.waterlily
         "wheat" -> return R.drawable.wheat
     }
-    return 0
+    return R.drawable.pumpkin
 }

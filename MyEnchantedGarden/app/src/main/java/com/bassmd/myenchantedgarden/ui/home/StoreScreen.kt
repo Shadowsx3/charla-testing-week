@@ -14,11 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -53,7 +55,6 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StoreScreen(
-    navController: NavHostController = rememberNavController(),
     viewModel: StoreViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
@@ -74,7 +75,7 @@ fun StoreScreen(
                         color = MaterialTheme.colorScheme.primary,
                     )
                 }, colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.onTertiaryContainer
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
                 )
             )
         },
@@ -85,18 +86,13 @@ fun StoreScreen(
         ) {
             Card(
                 modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
+                    .fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium.copy(
-                    topEnd = CornerSize(0.dp),
-                    topStart = CornerSize(0.dp),
-                    bottomStart = CornerSize(16.dp),
-                    bottomEnd = CornerSize(16.dp)
+                    all = CornerSize(0.dp)
                 ),
-                border = BorderStroke(width = 2.dp, color = Color.Black),
+                border = BorderStroke(width = 2.dp, color = Color.DarkGray),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    containerColor = Color.Transparent,
                 ),
             ) {
                 Box(
@@ -105,24 +101,37 @@ fun StoreScreen(
                     Text(
                         modifier = Modifier.padding(vertical = 10.dp),
                         style = MaterialTheme.typography.headlineSmall,
-                        text = "Coins: ${currentUser.value!!.coins}"
+                        text = "Coins: ${currentUser.value.coins}"
                     )
                 }
             }
-            LazyColumn(
+            Surface(
                 modifier = Modifier
-                    .padding(10.dp)
-            ) {
-                items(store.value.size) { index ->
-                    StoreItem(store.value[index], currentUser.value!!.coins) { id ->
-                        coroutineScope.launch {
-                            val result = viewModel.buy(id)
-                            result.onFailure { failure ->
-                                Toast.makeText(
-                                    context,
-                                    failure.message,
-                                    Toast.LENGTH_LONG
-                                ).show()
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                shape = RoundedCornerShape(corner = CornerSize(6.dp)),
+                border = BorderStroke(
+                    width = 2.dp,
+                    color = Color.DarkGray
+                )
+            )
+            {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(2.dp)
+                ) {
+                    items(store.value.size) { index ->
+                        StoreItem(store.value[index], currentUser.value!!.coins) { id ->
+                            coroutineScope.launch {
+                                val result = viewModel.buy(id)
+                                result.onFailure { failure ->
+                                    Toast.makeText(
+                                        context,
+                                        failure.message,
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
                             }
                         }
                     }

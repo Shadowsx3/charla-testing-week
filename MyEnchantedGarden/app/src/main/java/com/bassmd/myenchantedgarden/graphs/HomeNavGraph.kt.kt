@@ -14,20 +14,20 @@ import com.bassmd.myenchantedgarden.ui.home.ProfileScreen
 import com.bassmd.myenchantedgarden.ui.home.StoreScreen
 
 @Composable
-fun HomeNavGraph(navController: NavHostController) {
+fun HomeNavGraph(navController: NavHostController, oldNavHostController: NavHostController) {
     NavHost(
         navController = navController,
         route = Graph.HOME,
         startDestination = HomeBottomBar.Plants.route
     ) {
         composable(route = HomeBottomBar.Plants.route) {
-            PlantsScreen(navController)
+            PlantsScreen()
         }
         composable(route = HomeBottomBar.Store.route) {
-            StoreScreen(navController)
+            StoreScreen()
         }
         composable(route = HomeBottomBar.Profile.route) {
-            ProfileScreen(navController)
+            ProfileScreen(oldNavHostController)
         }/*
         detailsNavGraph(navController = navController)*/
     }

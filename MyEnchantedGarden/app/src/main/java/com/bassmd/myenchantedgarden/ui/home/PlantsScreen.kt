@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -33,17 +34,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,8 +62,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bassmd.myenchantedgarden.R
+import com.bassmd.myenchantedgarden.dto.defaultUser
 import com.bassmd.myenchantedgarden.ui.HomeBottomBar
 import com.bassmd.myenchantedgarden.ui.home.components.PlantItem
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock.System.now
@@ -67,14 +75,23 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlantsScreen(
-    navController: NavHostController = rememberNavController(),
     viewModel: PlantsViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val plants = viewModel.userPlants.collectAsStateWithLifecycle(initialValue = listOf())
-    val currentUser = viewModel.currentUser.collectAsStateWithLifecycle(initialValue = null)
+    val currentUser = viewModel.currentUser.collectAsStateWithLifecycle(initialValue = defaultUser)
     val openDialog = remember { mutableStateOf(false) }
+    val currentTime = remember { mutableStateOf(now()) }
+
+    if (plants.value.isNotEmpty()) {
+        LaunchedEffect(key1 = Unit) {
+            while (true) {
+                delay(1000)
+                currentTime.value = now()
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -89,20 +106,6 @@ fun PlantsScreen(
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 ),
-                actions = {
-                    IconButton(
-                        modifier = Modifier.padding(8.dp),
-                        onClick = {
-                            coroutineScope.launch {
-                                viewModel.updatePlants()
-                            }
-                        }) {
-                        Icon(
-                            imageVector = Icons.Filled.Refresh,
-                            contentDescription = "Refresh plants"
-                        )
-                    }
-                },
             )
         },
         floatingActionButton = {
@@ -135,7 +138,6 @@ fun PlantsScreen(
                             .padding(16.dp)
                             .fillMaxWidth()
                             .verticalScroll(rememberScrollState()),
-
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Image(
@@ -161,18 +163,13 @@ fun PlantsScreen(
             ) {
                 Card(
                     modifier = Modifier
-                        .padding(start = 10.dp, end = 10.dp)
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
+                        .fillMaxWidth(),
                     shape = MaterialTheme.shapes.medium.copy(
-                        topEnd = CornerSize(0.dp),
-                        topStart = CornerSize(0.dp),
-                        bottomStart = CornerSize(16.dp),
-                        bottomEnd = CornerSize(16.dp)
+                        all = CornerSize(0.dp)
                     ),
-                    border = BorderStroke(width = 2.dp, color = Color.Black),
+                    border = BorderStroke(width = 2.dp, color = Color.DarkGray),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        containerColor = Color.Transparent,
                     ),
                 ) {
                     Box(
@@ -181,24 +178,37 @@ fun PlantsScreen(
                         Text(
                             modifier = Modifier.padding(vertical = 10.dp),
                             style = MaterialTheme.typography.headlineSmall,
-                            text = "Coins: ${currentUser.value?.coins.toString()}"
+                            text = "Coins: ${currentUser.value.coins}"
                         )
                     }
                 }
-                LazyColumn(
+                Surface(
                     modifier = Modifier
-                        .padding(10.dp)
-                ) {
-                    items(plants.value.size) { index ->
-                        PlantItem(plants.value[index], viewModel.currentTime) { id ->
-                            coroutineScope.launch {
-                                val result = viewModel.collect(id)
-                                result.onFailure { failure ->
-                                    Toast.makeText(
-                                        context,
-                                        failure.message,
-                                        Toast.LENGTH_LONG
-                                    ).show()
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    shape = RoundedCornerShape(corner = CornerSize(6.dp)),
+                    border = BorderStroke(
+                        width = 2.dp,
+                        color = Color.DarkGray
+                    )
+                )
+                {
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(10.dp)
+                    ) {
+                        items(plants.value.size) { index ->
+                            PlantItem(plants.value[index], currentTime.value) { id ->
+                                coroutineScope.launch {
+                                    val result = viewModel.collect(id)
+                                    result.onFailure { failure ->
+                                        Toast.makeText(
+                                            context,
+                                            failure.message,
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
                                 }
                             }
                         }

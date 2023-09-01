@@ -1,5 +1,6 @@
 package com.bassmd.myenchantedgarden.ui.home.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -30,7 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.bassmd.myenchantedgarden.R
+import com.bassmd.myenchantedgarden.dto.AchievementsModel
 import com.bassmd.myenchantedgarden.dto.PlantsModel
+import com.bassmd.myenchantedgarden.dto.getAchievementImages
 import com.bassmd.myenchantedgarden.dto.getPlantImages
 import com.bassmd.myenchantedgarden.koin.appModule
 import com.bassmd.myenchantedgarden.ui.auth.RegisterScreen
@@ -44,16 +48,9 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
 @Composable
-fun PlantItem(
-    plantsModel: PlantsModel,
-    currentTime: Instant,
-    onClick: (Int) -> Unit
+fun AchievementItem(
+    achievementsModel: AchievementsModel
 ) {
-    val nextCollect = plantsModel.nextCollectTime - currentTime
-    val canCollect = (plantsModel.nextCollectTime - currentTime).inWholeMilliseconds <= 0
-    val nextCollectText =
-        if (canCollect) "now" else "${nextCollect.inWholeMinutes}m${nextCollect.inWholeSeconds - nextCollect.inWholeMinutes * 60}s"
-
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -61,66 +58,48 @@ fun PlantItem(
             .wrapContentHeight(),
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            containerColor = MaterialTheme.colorScheme.onTertiary,
         ),
+        border = BorderStroke(2.dp, Color.Black)
     ) {
         Column(
             Modifier
                 .padding(8.dp)
                 .fillMaxWidth()
-                .align(Alignment.CenterHorizontally)
+                .align(Alignment.CenterHorizontally),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
-            ) {
-                Text(
-                    modifier = Modifier.padding(vertical = 3.dp).weight(1f),
-                    text = plantsModel.name,
-                    style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center
-                )
-                Button(modifier = Modifier.padding(horizontal = 10.dp), onClick = { onClick(plantsModel.id) }, enabled = canCollect) {
-                    Text(
-                        text = "Collect",
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                }
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
             ) {
                 Image(
                     painter = painterResource(
-                        id = getPlantImages(plantsModel.filePath)
+                        id = getAchievementImages(achievementsModel.filePath)
                     ),
-                    contentDescription = plantsModel.filePath,
+                    contentDescription = achievementsModel.filePath,
                     modifier = Modifier
-                        .size(135.dp),
+                        .size(130.dp),
                     contentScale = ContentScale.Fit,
                 )
                 Column(
                     Modifier
-                        .padding(8.dp)
+                        .padding(horizontal = 5.dp)
                         .fillMaxWidth()
                         .align(Alignment.Top),
-                    verticalArrangement = Arrangement.Center
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top
                 ) {
                     Text(
+                        modifier = Modifier
+                            .padding(vertical = 3.dp),
+                        text = achievementsModel.name,
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
                         modifier = Modifier.padding(vertical = 3.dp),
-                        text = "Coins: ${plantsModel.coinsToCollect}",
-                        style = MaterialTheme.typography.labelMedium,
-                    )
-                    Text(
-                        text = "Next collect in:\n$nextCollectText",
-                        style = MaterialTheme.typography.labelMedium,
-                    )
-                    Text(
-                        modifier = Modifier.padding(top = 10.dp),
-                        text = plantsModel.description,
-                        style = MaterialTheme.typography.labelMedium,
+                        text = achievementsModel.description,
+                        style = MaterialTheme.typography.bodyLarge,
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -137,16 +116,15 @@ fun PlantItem(
 @Composable
 private fun PreviewLoginScreen() {
     MyEnchantedGardenTheme(dynamicColor = false) {
-        PlantItem(
-            PlantsModel(
-                id = 1,
-                "Holiss",
-                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                15,
+        AchievementItem(
+            AchievementsModel(
+                "Holis this is a large",
+                0,
+                "Bien hecho fadsf adsfsa fads fds f dsf sdf ds fsda f asdfsd fadsffasdfas",
                 "cactus",
                 true,
-                now().plus(2.minutes).plus(3.seconds)
-            ), now()
-        ) {}
+                1
+            )
+        )
     }
 }

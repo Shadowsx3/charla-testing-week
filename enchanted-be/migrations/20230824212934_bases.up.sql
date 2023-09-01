@@ -1,25 +1,33 @@
 -- Add up migration script here
 
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (1, 'Bamboo', 'NaN', 300, 'bamboo');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (2, 'Cactus', 'NN', 1300, 'cactus');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (4, 'Coffee beans', 'N4N', 50, 'coffee_beans');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (5, 'Leaf', 'NaN5', 9999, 'leaf');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (7, 'Mushroom', 'NN', 1300, 'mushroom');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (8, 'Plant', 'N3N', 3300, 'plant_alone');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (9, 'Pumpkin', 'N4N', 50, 'pumpkin');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (10, 'Rose', 'NaN5', 9999, 'rose');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (11, 'Sunflower', 'NaN', 300, 'sunflower');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (12, 'Tulip', 'NN', 1300, 'tulip');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (3, 'Waterlily', 'N3N', 3300, 'waterlily');
-insert into plants (id, name,description,coins_to_collect,file_path) VALUES (6, 'Wheat', 'N4N', 50, 'wheat');
+-- Insert plant data
+INSERT INTO plants (id, name, description, coins_to_collect, file_path) VALUES
+(1, 'Bamboo', 'Tall and fast-growing plant.', 300, 'bamboo'),
+(2, 'Cactus', 'Succulent desert plant with spines.', 1300, 'cactus'),
+(3, 'Coffee beans', 'Produces beans used for coffee.', 50, 'coffee_beans'),
+(4, 'Leaf', 'Simple and common leafy plant.', 9999, 'leaf'),
+(5, 'Mushroom', 'Fungi that often grows in damp places.', 1300, 'mushroom'),
+(6, 'Plant', 'Basic and versatile flowering plant.', 3300, 'plant_alone'),
+(7, 'Pumpkin', 'Vine crop known for large orange fruit.', 50, 'pumpkin'),
+(8, 'Rose', 'Classic flowering plant with thorns.', 9999, 'rose'),
+(9, 'Sunflower', 'Tall plant with large, sunny flowers.', 300, 'sunflower'),
+(10, 'Tulip', 'Colorful bulbous flower in various hues.', 1300, 'tulip'),
+(11, 'Waterlily', 'Aquatic plant with floating leaves.', 3300, 'waterlily'),
+(12, 'Wheat', 'Common cereal crop used for food.', 50, 'wheat');
 
-
-insert into achievements (id, name,description,code,file_path,plants_id) VALUES (1, 'Wow, that is a session', 'Idk, just it, thanks', 'LOG1N', '/achievements/1.png',1);
-insert into achievements (id, name,description,code,file_path,plants_id) VALUES (2, 'Click on profile', 'Idk, just it, thanks', 'PROF1LE', '/achievements/2.png',2);
-insert into achievements (id, name,description,code,file_path,plants_id) VALUES (3, 'Get an incredible plant', 'Idk, just it, thanks', 'PL4NT', '/achievements/3.png',3);
-insert into achievements (id, name,description,code,file_path,plants_id) VALUES (4, 'Secret1', 'Idk, just it, thanks', 'S3CRET', '/achievements/4.png',4);
-insert into achievements (id, name,description,code,file_path,plants_id) VALUES (5, 'Secret2', 'Idk, just it, thanks', 'SECR3T', '/achievements/5.png',5);
-insert into achievements (id, name,description,code,file_path,plants_id) VALUES (6, 'Secret3', 'Idk, just it, thanks', '5ECRET', '/achievements/6.png',1);
+-- Insert achievement data
+INSERT INTO achievements (id, name, description, code, file_path, plants_id) VALUES
+(1, 'Lets save money', 'Achieve this by growing Bamboo.', 'B4NK', 'bank', 1),
+(2, 'Wow, a gift', 'Achieve this by growing Cactus.', 'B0X', 'box', 2),
+(3, 'I LOVE COFFE', 'Achieve this by growing Coffee beans.', 'C0FFE', 'coffee', 3),
+(4, 'RainBow', 'Achieve this by growing Leaf.', 'C0LOR', 'color', 4),
+(5, 'Perfect, right?', 'Achieve this by growing Mushroom.', 'C0MPASS', 'compass', 5),
+(6, 'Another money', 'Achieve this by growing Bamboo.', 'DI4MOND', 'diamond', 6),
+(7, 'Que dice?', 'Achieve this by growing Bamboo.', 'D1CE', 'dice', 7),
+(8, 'Lets play', 'Achieve this by growing Cactus.', 'G4ME', 'game', 8),
+(9, 'Science!', 'Achieve this by growing Coffee beans.', 'M1CRO', 'microscope', 9),
+(10, 'Coooiiins', 'Achieve this by growing Leaf.', 'M0NEY', 'money', 10),
+(11, 'The tribe', 'Achieve this by growing Mushroom.', 'TR1BAL', 'tribal', 11);
 
 
 insert into events (id,name,start_date,end_date) VALUES (1, 'ALWAYS', '2016-06-22 00:00:00-03', '2099-06-22 19:10:25-07');
