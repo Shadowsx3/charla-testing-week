@@ -1,12 +1,13 @@
 package com.bassmd.myenchantedgarden.repo
 
-import android.util.Log
 import com.bassmd.myenchantedgarden.data.remote.achievements.AchievementsService
 import com.bassmd.myenchantedgarden.data.remote.auth.AuthService
 import com.bassmd.myenchantedgarden.data.remote.plants.PlantsService
 import com.bassmd.myenchantedgarden.data.remote.store.StoreService
 import com.bassmd.myenchantedgarden.data.remote.user.UserService
 import com.bassmd.myenchantedgarden.dto.*
+import com.bassmd.myenchantedgarden.repo.dto.StoreModel
+import com.bassmd.myenchantedgarden.repo.dto.UserModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
@@ -86,7 +87,7 @@ class UserRepositoryImpl(
     }
 
     override suspend fun register(registerRequest: RegisterRequest): Result<StatusModel> =
-        handleResponse(authService.register(registerRequest)) {}
+        handleResponse(authService.register(registerRequest), "🐞 Registration Success 🐞") {}
 
 
     override suspend fun getPlants(): Result<StatusModel> =

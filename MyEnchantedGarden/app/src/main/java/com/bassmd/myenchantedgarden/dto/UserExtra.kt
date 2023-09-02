@@ -1,5 +1,6 @@
 package com.bassmd.myenchantedgarden.dto
 
+import com.bassmd.myenchantedgarden.repo.dto.UserModel
 import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
 

@@ -22,7 +22,9 @@ class RegisterViewModel(private val userRepository: UserRepository) : AppViewMod
         val result: Result<StatusModel> =
             userRepository.register(RegisterRequest(email.value, name.value, password.value))
         isBusy = false
-        result.onFailure {
+        result.fold({
+            showError(it.message)
+        }) {
             showError(it.message.toString())
         }
         return result.isSuccess

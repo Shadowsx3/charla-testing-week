@@ -20,7 +20,7 @@ class StoreViewModel(private val userRepository: UserRepository) : AppViewModel(
     suspend fun buy(id: Int): Boolean {
         val result = userRepository.buyItem(StoreRequest(id = id))
         result.fold({
-            showError(it.message, SnackbarDuration.Short)
+            showError(it.message)
         }) {
             showError(it.message.toString())
         }

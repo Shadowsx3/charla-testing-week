@@ -31,7 +31,7 @@ open class AppViewModel(private val userRepository: UserRepository) : ViewModel(
         val result: Result<StatusModel> =
             userRepository.unlockAchievements(AchievementsRequest(it))
         result.fold({
-            showError(it.message, SnackbarDuration.Short)
+            showError(it.message)
         }) {
             showError(it.message.toString())
         }

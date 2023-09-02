@@ -25,7 +25,7 @@ class PlantsViewModel(private val userRepository: UserRepository) : AppViewModel
     suspend fun collect(id: Int): Boolean {
         val result = userRepository.collectPlant(PlantRequest(id = id))
         result.fold({
-            showError(it.message, SnackbarDuration.Short)
+            showError(it.message)
         }) {
             showError(it.message.toString())
         }
@@ -35,7 +35,7 @@ class PlantsViewModel(private val userRepository: UserRepository) : AppViewModel
     suspend fun play(won: Boolean): Boolean {
         val result = userRepository.playGame(PlayRequest(won))
         result.fold({
-            showError(it.message, SnackbarDuration.Short)
+            showError(it.message)
         }) {
             showError(it.message.toString())
         }

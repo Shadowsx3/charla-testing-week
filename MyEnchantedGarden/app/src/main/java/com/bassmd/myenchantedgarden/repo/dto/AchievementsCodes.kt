@@ -1,4 +1,4 @@
-package com.bassmd.myenchantedgarden.dto
+package com.bassmd.myenchantedgarden.repo.dto
 
 object AchievementsCodes {
     const val BANK = "B4NK"

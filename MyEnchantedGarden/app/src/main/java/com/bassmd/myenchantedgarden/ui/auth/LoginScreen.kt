@@ -2,7 +2,6 @@ package com.bassmd.myenchantedgarden.ui.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,19 +10,14 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,7 +32,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bassmd.myenchantedgarden.R
-import com.bassmd.myenchantedgarden.dto.AppError
 import com.bassmd.myenchantedgarden.graphs.AuthScreen
 import com.bassmd.myenchantedgarden.graphs.Graph
 import com.bassmd.myenchantedgarden.koin.appModule
@@ -160,7 +153,9 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = ko
                     TextButton(
                         modifier = Modifier.padding(start = 15.dp, end = 10.dp),
                         onClick = {
-                            navController.navigate(AuthScreen.SignUp.route)
+                            navController.navigate(AuthScreen.SignUp.route){
+                                popUpTo(0)
+                            }
                         },
                     ) {
                         Text(

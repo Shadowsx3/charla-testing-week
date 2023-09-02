@@ -54,10 +54,6 @@ INSERT INTO store_items
 (14, 450, 'Waterlily Serenity', 'Tranquil waterlilies for a serene garden experience.', 1, 11),
 (15, 3333, 'Wheat Harvest', 'A bundle of wheat plants, perfect for a countryside feel.', 2, 12);
 
--- Ensure the cost falls within the specified range (100 - 10000)
-UPDATE store_items SET cost = 100 WHERE cost < 100;
-UPDATE store_items SET cost = 10000 WHERE cost > 10000;
-
 
 INSERT INTO users (id,email,name,role,password,next_claim_energy_time) VALUES ('d114ae53-b841-4053-9d2c-cfcffbfaadd4', 'a', 'a', 'User', '$argon2id$v=19$m=19456,t=2,p=1$ISVS9jnSynRhBOXdegt61Q$N4+TsK8Y3EVwuSjryiGK/gILTakS+5o7sZiNZnZK3sY', now());
 

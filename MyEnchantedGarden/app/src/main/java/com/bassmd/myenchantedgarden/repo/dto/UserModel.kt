@@ -1,4 +1,4 @@
-package com.bassmd.myenchantedgarden.dto
+package com.bassmd.myenchantedgarden.repo.dto
 
 import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
