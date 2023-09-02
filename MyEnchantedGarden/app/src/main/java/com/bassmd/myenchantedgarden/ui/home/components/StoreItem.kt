@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -80,10 +81,15 @@ fun StoreItem(
                     .align(Alignment.Top),
             ) {
                 Text(
-                    modifier = Modifier.padding(vertical = 3.dp),
+                    modifier = Modifier.padding(vertical = 3.dp).fillMaxWidth(),
                     text = storeModel.name,
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center
+                )
+                Text(
+                    modifier = Modifier.padding(vertical = 3.dp),
+                    text = "Price: ${storeModel.cost}",
+                    style = MaterialTheme.typography.bodyLarge,
                 )
                 Text(
                     modifier = Modifier.padding(vertical = 3.dp),
@@ -92,15 +98,11 @@ fun StoreItem(
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(
-                    modifier = Modifier.padding(vertical = 3.dp),
-                    text = "Cost: ${storeModel.cost}",
-                    style = MaterialTheme.typography.bodyLarge,
-                )
                 Box(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                 ) {
                     Button(
+                        shape = RoundedCornerShape(12.dp),
                         onClick = { onClick(storeModel.id) },
                         enabled = storeModel.isAvailable && storeModel.cost <= coins
                     ) {

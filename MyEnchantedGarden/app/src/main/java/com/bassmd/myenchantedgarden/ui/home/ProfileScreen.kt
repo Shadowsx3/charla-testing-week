@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -36,12 +38,14 @@ import androidx.compose.material3.CardElevation
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -51,6 +55,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -70,6 +75,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bassmd.myenchantedgarden.R
+import com.bassmd.myenchantedgarden.dto.AchievementsCodes
 import com.bassmd.myenchantedgarden.dto.StoreModel
 import com.bassmd.myenchantedgarden.dto.UserModel
 import com.bassmd.myenchantedgarden.dto.defaultUser
@@ -80,6 +86,7 @@ import com.bassmd.myenchantedgarden.ui.home.components.AchievementItem
 import com.bassmd.myenchantedgarden.ui.home.components.PlantItem
 import com.bassmd.myenchantedgarden.ui.home.components.StoreItem
 import com.bassmd.myenchantedgarden.ui.theme.MyEnchantedGardenTheme
+import com.bassmd.myenchantedgarden.ui.utils.CustomSnackBar
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -90,14 +97,30 @@ fun ProfileScreen(
     navController: NavHostController = rememberNavController(),
     viewModel: ProfileViewModel = koinViewModel()
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val achievements =
         viewModel.userAchievements.collectAsStateWithLifecycle(initialValue = listOf())
     val currentUser = viewModel.currentUser.collectAsStateWithLifecycle(initialValue = defaultUser)
     val (openDialogState, setOpenDialogState) = remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val appError =
+        viewModel.currentAppError.collectAsStateWithLifecycle()
+    if (appError.value.showError) {
+        LaunchedEffect(snackbarHostState) {
+            snackbarHostState.showSnackbar(
+                message = appError.value.message,
+                duration = appError.value.duration
+            )
+            viewModel.dismissError()
+        }
+    }
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                CustomSnackBar(data)
+            }
+        },
         topBar = {
             TopAppBar(
                 title = {
@@ -118,9 +141,11 @@ fun ProfileScreen(
                         modifier = Modifier.padding(8.dp),
                         onClick = {
                             coroutineScope.launch {
-                                viewModel.signOut()
-                                if (!viewModel.isLoggedIn) {
-                                    navController.navigate(Graph.ROOT)
+                                val result = viewModel.signOut()
+                                if (result) {
+                                    navController.navigate(Graph.ROOT) {
+                                        popUpTo(0)
+                                    }
                                 }
                             }
                         }) {
@@ -133,8 +158,12 @@ fun ProfileScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { setOpenDialogState(!openDialogState) }) {
+            ExtendedFloatingActionButton(
+                onClick = {
+                    setOpenDialogState(true)
+                }) {
                 Icon(Icons.Filled.Build, "Enter code")
+                Text(text = "Unlock")
             }
         }
     ) { innerPadding ->
@@ -158,9 +187,7 @@ fun ProfileScreen(
                     CodeDialog({ setOpenDialogState(false) }, {
                         coroutineScope.launch {
                             viewModel.unlock(it)
-                            if (viewModel.isUnlocked) {
-                                setOpenDialogState(false)
-                            }
+                            setOpenDialogState(false)
                         }
                     })
                 }
@@ -172,7 +199,16 @@ fun ProfileScreen(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CreateImageProfile()
+                CreateImageProfile(Modifier.clickable {
+                    if (achievements.value.find { a -> a.name == "Lets play" } == null) {
+                        coroutineScope.launch {
+                            viewModel.unlock(AchievementsCodes.GAME)
+                        }
+                    } else {
+                        viewModel.showError("🦔\nShe is indeed a cute hedgehog\n💘")
+
+                    }
+                })
                 CreateInfo(currentUser)
                 Surface(
                     modifier = Modifier
@@ -230,8 +266,8 @@ fun ProfileScreen(
 private fun CreateImageProfile(modifier: Modifier = Modifier) {
     Surface(
         modifier = Modifier
-            .padding(top = 20.dp)
-            .size(180.dp)
+            .padding(top = 10.dp)
+            .size(160.dp)
             .padding(2.dp),
         shape = CircleShape,
         border = BorderStroke(2.dp, Color.DarkGray),
@@ -240,7 +276,7 @@ private fun CreateImageProfile(modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(id = R.drawable.hedgehog),
             contentDescription = "profile image",
-            modifier = modifier.size(160.dp),
+            modifier = modifier.size(150.dp),
             contentScale = ContentScale.Crop
         )
     }
@@ -249,8 +285,6 @@ private fun CreateImageProfile(modifier: Modifier = Modifier) {
 @Composable
 private fun CreateInfo(userModel: State<UserModel>) {
     Column(
-        modifier = Modifier
-            .padding(5.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -259,20 +293,19 @@ private fun CreateInfo(userModel: State<UserModel>) {
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth(),
-            fontSize = 50.sp,
+            fontSize = 45.sp,
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.tertiary,
         )
-        Spacer(modifier = Modifier.height(5.dp))
         Text(
             text = if (userModel.value.isPremium) "⭐Premium⭐" else "Free-User",
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth(),
+            fontSize = 25.sp,
             style = MaterialTheme.typography.headlineSmall,
             color = Color.Black,
         )
-        Spacer(modifier = Modifier.height(3.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -281,12 +314,14 @@ private fun CreateInfo(userModel: State<UserModel>) {
             Text(
                 text = "Wins: ${userModel.value.wins}",
                 textAlign = TextAlign.Center,
+                fontSize = 25.sp,
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color.Black,
             )
             Text(
                 text = "Losses: ${userModel.value.losses}",
                 textAlign = TextAlign.Center,
+                fontSize = 25.sp,
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color.Black,
             )

@@ -2,6 +2,7 @@ package com.bassmd.myenchantedgarden.repo
 
 import com.bassmd.myenchantedgarden.dto.AchievementsModel
 import com.bassmd.myenchantedgarden.dto.AchievementsRequest
+import com.bassmd.myenchantedgarden.dto.AppError
 import com.bassmd.myenchantedgarden.dto.LoginRequest
 import com.bassmd.myenchantedgarden.dto.PlantRequest
 import com.bassmd.myenchantedgarden.dto.PlantsModel
@@ -13,9 +14,9 @@ import com.bassmd.myenchantedgarden.dto.StoreModel
 import com.bassmd.myenchantedgarden.dto.StoreRequest
 import com.bassmd.myenchantedgarden.dto.UserModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 interface UserRepository {
-
     val currentUser: Flow<UserModel>
     val userPlants: Flow<List<PlantsModel>>
     val userStore: Flow<List<StoreModel>>

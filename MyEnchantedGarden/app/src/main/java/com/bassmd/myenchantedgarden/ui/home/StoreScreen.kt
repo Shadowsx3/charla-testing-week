@@ -20,6 +20,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,6 +30,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -48,6 +52,7 @@ import com.bassmd.myenchantedgarden.graphs.Graph
 import com.bassmd.myenchantedgarden.ui.HomeBottomBar
 import com.bassmd.myenchantedgarden.ui.home.components.PlantItem
 import com.bassmd.myenchantedgarden.ui.home.components.StoreItem
+import com.bassmd.myenchantedgarden.ui.utils.CustomSnackBar
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -57,12 +62,28 @@ import org.koin.androidx.compose.koinViewModel
 fun StoreScreen(
     viewModel: StoreViewModel = koinViewModel()
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val store = viewModel.userStore.collectAsStateWithLifecycle(initialValue = listOf())
     val currentUser = viewModel.currentUser.collectAsStateWithLifecycle(initialValue = defaultUser)
+    val snackbarHostState = remember { SnackbarHostState() }
+    val appError =
+        viewModel.currentAppError.collectAsStateWithLifecycle()
+    if (appError.value.showError) {
+        LaunchedEffect(snackbarHostState) {
+            snackbarHostState.showSnackbar(
+                message = appError.value.message,
+                duration = appError.value.duration
+            )
+            viewModel.dismissError()
+        }
+    }
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                CustomSnackBar(data)
+            }
+        },
         topBar = {
             TopAppBar(
                 title = {
@@ -122,16 +143,9 @@ fun StoreScreen(
                         .padding(2.dp)
                 ) {
                     items(store.value.size) { index ->
-                        StoreItem(store.value[index], currentUser.value!!.coins) { id ->
+                        StoreItem(store.value[index], currentUser.value.coins) { id ->
                             coroutineScope.launch {
-                                val result = viewModel.buy(id)
-                                result.onFailure { failure ->
-                                    Toast.makeText(
-                                        context,
-                                        failure.message,
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
+                                viewModel.buy(id)
                             }
                         }
                     }

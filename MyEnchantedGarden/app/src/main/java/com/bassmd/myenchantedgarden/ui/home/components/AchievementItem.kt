@@ -100,7 +100,6 @@ fun AchievementItem(
                         modifier = Modifier.padding(vertical = 3.dp),
                         text = achievementsModel.description,
                         style = MaterialTheme.typography.bodyLarge,
-                        maxLines = 3,
                         overflow = TextOverflow.Ellipsis
                     )
                 }

@@ -65,10 +65,11 @@ async fn post_user_play_handler(
 
     let query_result = sqlx::query!(
         r#"UPDATE users
-            SET coins = $1, wins = $2, energy = $3, next_claim_energy_time = $4
-            WHERE id = $5"#,
+            SET coins = $1, wins = $2, losses = $3, energy = $4, next_claim_energy_time = $5
+            WHERE id = $6"#,
         user.coins,
         user.wins,
+        user.losses,
         user.energy,
         user.next_claim_energy_time,
         user_id

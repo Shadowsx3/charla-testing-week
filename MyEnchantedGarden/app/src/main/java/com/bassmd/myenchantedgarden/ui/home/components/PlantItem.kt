@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -76,12 +77,19 @@ fun PlantItem(
                 horizontalArrangement = Arrangement.End
             ) {
                 Text(
-                    modifier = Modifier.padding(vertical = 3.dp).weight(1f),
+                    modifier = Modifier
+                        .padding(vertical = 3.dp)
+                        .weight(1f),
                     text = plantsModel.name,
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center
                 )
-                Button(modifier = Modifier.padding(horizontal = 10.dp), onClick = { onClick(plantsModel.id) }, enabled = canCollect) {
+                Button(
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    onClick = { onClick(plantsModel.id) },
+                    enabled = canCollect
+                ) {
                     Text(
                         text = "Collect",
                         style = MaterialTheme.typography.bodyLarge,

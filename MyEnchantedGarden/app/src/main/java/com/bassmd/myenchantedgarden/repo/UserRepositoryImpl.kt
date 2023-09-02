@@ -6,23 +6,9 @@ import com.bassmd.myenchantedgarden.data.remote.auth.AuthService
 import com.bassmd.myenchantedgarden.data.remote.plants.PlantsService
 import com.bassmd.myenchantedgarden.data.remote.store.StoreService
 import com.bassmd.myenchantedgarden.data.remote.user.UserService
-import com.bassmd.myenchantedgarden.dto.AchievementsModel
-import com.bassmd.myenchantedgarden.dto.AchievementsRequest
-import com.bassmd.myenchantedgarden.dto.EventModel
-import com.bassmd.myenchantedgarden.dto.LoginRequest
-import com.bassmd.myenchantedgarden.dto.PlantRequest
-import com.bassmd.myenchantedgarden.dto.PlantsModel
-import com.bassmd.myenchantedgarden.dto.PlayRequest
-import com.bassmd.myenchantedgarden.dto.RegisterRequest
-import com.bassmd.myenchantedgarden.dto.StatusModel
-import com.bassmd.myenchantedgarden.dto.StoreItem
-import com.bassmd.myenchantedgarden.dto.StoreModel
-import com.bassmd.myenchantedgarden.dto.StoreRequest
-import com.bassmd.myenchantedgarden.dto.UserModel
-import com.bassmd.myenchantedgarden.dto.defaultUser
+import com.bassmd.myenchantedgarden.dto.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock.System.now
 
@@ -35,170 +21,130 @@ class UserRepositoryImpl(
 ) : UserRepository {
 
     private val userData = MutableStateFlow(defaultUser)
-
     override val currentUser: Flow<UserModel> = userData
 
-    private val plants = MutableStateFlow<List<PlantsModel>>(listOf())
-
+    private val plants = MutableStateFlow<List<PlantsModel>>(emptyList())
     override val userPlants: Flow<List<PlantsModel>> =
-        plants.map { p -> p.filter { plant -> plant.isUnlocked } }
+        plants.map { it.filter { plant -> plant.isUnlocked } }
 
-    private val storeItems = MutableStateFlow<List<StoreItem>>(listOf())
-
-    override val userStore: Flow<List<StoreModel>> = storeItems.map {
+    private val storeItems = MutableStateFlow<List<StoreItem>>(emptyList())
+    override val userStore: Flow<List<StoreModel>> = storeItems.map { storeItems ->
         val activeEvents = getActiveEventIds()
-        return@map it.filter { s ->
-            activeEvents.contains(s.eventId)
-        }.map { si ->
-            StoreModel(
-                si.id,
-                si.cost,
-                si.name,
-                si.description,
-                plants.value.first { p -> p.id == si.plantId }.filePath,
-                si.isAvailable
-            )
-        }
+        storeItems
+            .filter { si -> activeEvents.contains(si.eventId) }
+            .map { si ->
+                StoreModel(
+                    si.id,
+                    si.cost,
+                    si.name,
+                    si.description,
+                    plants.value.first { p -> p.id == si.plantId }.filePath,
+                    si.isAvailable
+                )
+            }
     }
 
-    private val achievements = MutableStateFlow<List<AchievementsModel>>(listOf())
-
+    private val achievements = MutableStateFlow<List<AchievementsModel>>(emptyList())
     override val userAchievements: Flow<List<AchievementsModel>> =
-        achievements.map { p -> p.filter { a -> a.isUnlocked } }
+        achievements.map { it.filter { a -> a.isUnlocked } }
 
-    private var events: List<EventModel> = listOf()
+    private var events: List<EventModel> = emptyList()
 
     private fun getActiveEventIds(): List<Int> {
         val today = now()
         return events.filter { e -> e.startDate <= today && e.endDate >= today }.map { e -> e.id }
     }
 
+    private suspend fun <T> handleResponse(
+        response: Result<T>,
+        message: String = "success",
+        onSuccess: suspend (T) -> Unit
+    ): Result<StatusModel> {
+        return response.fold(
+            onSuccess = {
+                onSuccess(it)
+                Result.success(StatusModel(status = "success", message))
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+    }
+
     override suspend fun login(loginRequest: LoginRequest): Result<StatusModel> {
         val response = authService.loginUser(loginRequest)
-        val newUser = response.getOrNull()
-        if (newUser != null) {
-            userData.value = newUser.user
-            return Result.success(StatusModel("success"))
+        return handleResponse(response) {
+            userData.value = it.user
         }
-        return Result.failure(Error("Users error"))
     }
 
     override suspend fun logOut(): Result<StatusModel> {
         val response = authService.logOut()
-        response.onSuccess {
+        return handleResponse(response) {
             userData.value = defaultUser
         }
-        return response
     }
 
-    override suspend fun register(registerRequest: RegisterRequest): Result<StatusModel> {
-        return authService.register(registerRequest)
-    }
+    override suspend fun register(registerRequest: RegisterRequest): Result<StatusModel> =
+        handleResponse(authService.register(registerRequest)) {}
 
-    override suspend fun getPlants(): Result<StatusModel> {
-        val response = plantsService.getPlants()
-        val newPlants = response.getOrNull()
-        if (newPlants != null) {
-            plants.value = newPlants.plants
-            return Result.success(StatusModel("success"))
+
+    override suspend fun getPlants(): Result<StatusModel> =
+        handleResponse(plantsService.getPlants()) {
+            plants.value = it.plants
         }
-        return Result.failure(Error("Plants error"))
-    }
 
     override suspend fun collectPlant(plantRequest: PlantRequest): Result<StatusModel> {
         val response = plantsService.collectPlant(plantRequest)
-        val newUser = response.getOrNull()
-        if (newUser != null) {
-            userData.value = newUser.user
-            return getPlants()
+        return handleResponse(response, "🌿 Plant collected 🌿") {
+            userData.value = it.user
+            getPlants()
         }
-        response.onFailure {
-            return Result.failure(Error(it.message))
-        }
-        return Result.failure(Error("IDK"))
     }
 
-    override suspend fun getAchievements(): Result<StatusModel> {
-        val response = achievementsService.getAchievements()
-        val newAchievements = response.getOrNull()
-        if (newAchievements != null) {
-            achievements.value = newAchievements.achievements
-            return Result.success(StatusModel("success"))
+    override suspend fun getAchievements(): Result<StatusModel> =
+        handleResponse(achievementsService.getAchievements()) {
+            achievements.value = it.achievements
         }
-        return Result.failure(Error("Achievements error"))
-    }
 
     override suspend fun unlockAchievements(achievementsRequest: AchievementsRequest): Result<StatusModel> {
         val response = achievementsService.unlockAchievement(achievementsRequest)
-        val newAchievements = response.getOrNull()
-        if (newAchievements != null) {
-            achievements.value = newAchievements.achievements
+        return handleResponse(response, "Unlocked successfully ⭐") {
+            achievements.value = it.achievements
             getUser()
             getPlants()
             getStore()
-            return Result.success(StatusModel("success"))
         }
-        response.onFailure {
-            return Result.failure(Error(it.message))
-        }
-        return Result.failure(Error("IDK"))
     }
 
-    override suspend fun getStore(): Result<StatusModel> {
-        val response = storeService.getStore()
-        val newStore = response.getOrNull()
-        if (newStore != null) {
-            storeItems.value = newStore.store
-            return Result.success(StatusModel("success"))
+    override suspend fun getStore(): Result<StatusModel> =
+        handleResponse(storeService.getStore()) {
+            storeItems.value = it.store
         }
-        return Result.failure(Error("Store error"))
-    }
 
-    override suspend fun getEvents(): Result<StatusModel> {
-        val response = storeService.getEvents()
-        val newEvents = response.getOrNull()
-        if (newEvents != null) {
-            events = newEvents.events
-            return Result.success(StatusModel("success"))
+    override suspend fun getEvents(): Result<StatusModel> =
+        handleResponse(storeService.getEvents()) {
+            events = it.events
         }
-        return Result.failure(Error("Events error"))
-    }
 
     override suspend fun buyItem(storeRequest: StoreRequest): Result<StatusModel> {
         val response = storeService.buyItem(storeRequest)
-        val newStore = response.getOrNull()
-        if (newStore != null) {
-            storeItems.value = newStore.store
+        return handleResponse(response, "Enjoy your plant 💖") {
+            storeItems.value = it.store
             getUser()
-            return getPlants()
+            getPlants()
         }
-        response.onFailure {
-            return Result.failure(Error(it.message))
-        }
-        return Result.failure(Error("IDK"))
     }
 
-    override suspend fun getUser(): Result<StatusModel> {
-        val response = userService.getProfile()
-        val newUser = response.getOrNull()
-        if (newUser != null) {
-            userData.value = newUser.user
-            return Result.success(StatusModel("success"))
+    override suspend fun getUser(): Result<StatusModel> =
+        handleResponse(userService.getProfile()) {
+            userData.value = it.user
         }
-        return Result.failure(Error("User error"))
-    }
 
     override suspend fun playGame(playRequest: PlayRequest): Result<StatusModel> {
         val response = userService.playGame(playRequest)
-        val newUser = response.getOrNull()
-        if (newUser != null) {
-            userData.value = newUser.user
-            return Result.success(StatusModel("success"))
+        return handleResponse(response, "That's what I call a game 🌻") {
+            userData.value = it.user
         }
-        response.onFailure {
-            return Result.failure(Error(it.message))
-        }
-        return Result.failure(Error("IDK"))
     }
-
 }

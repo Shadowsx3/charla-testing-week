@@ -1,5 +1,6 @@
 package com.bassmd.myenchantedgarden.model.profile
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,28 +10,19 @@ import com.bassmd.myenchantedgarden.dto.AchievementsRequest
 import com.bassmd.myenchantedgarden.repo.UserRepository
 import com.bassmd.myenchantedgarden.dto.LoginRequest
 import com.bassmd.myenchantedgarden.dto.StatusModel
+import com.bassmd.myenchantedgarden.model.app.AppViewModel
 
 
-class ProfileViewModel(private val userRepository: UserRepository) : ViewModel() {
-    val currentUser = userRepository.currentUser
-    val userAchievements = userRepository.userAchievements
-    var isLoggedIn by mutableStateOf(false)
+class ProfileViewModel(private val userRepository: UserRepository) : AppViewModel(userRepository) {
     var isBusy by mutableStateOf(false)
-    var isUnlocked by mutableStateOf(false)
 
-    suspend fun signOut() {
+    suspend fun signOut(): Boolean {
         isBusy = true
-        val loginResult: Result<StatusModel> = userRepository.logOut()
-        loginResult.onSuccess {
-            isLoggedIn = false
+        val result: Result<StatusModel> = userRepository.logOut()
+        result.onFailure {
+            showError(it.message.toString())
         }
         isBusy = false
-    }
-
-    suspend fun unlock(it: String) {
-        val unlockResult: Result<StatusModel> = userRepository.unlockAchievements(AchievementsRequest(it))
-        unlockResult.onSuccess {
-            isUnlocked = true
-        }
+        return result.isSuccess
     }
 }

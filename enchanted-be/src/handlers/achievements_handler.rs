@@ -19,7 +19,7 @@ async fn get_achievements_handler(
     select achievements.*,
     (user_id is not null) as is_unlocked
     from achievements left join users_achievements on achievements.id = users_achievements.achievements_id
-	where user_id is null or user_id = $1
+	and (user_id is NULL or user_id = $1)
     order by achievements.id"#)
         .bind(user_id)
         .fetch_all(&data.db)
@@ -53,7 +53,7 @@ async fn post_achievements_unlock_handler(
     select achievements.*,
     (user_id is not null) as is_unlocked
     from achievements left join users_achievements on achievements.id = users_achievements.achievements_id
-	where user_id is null or user_id = $1
+	and (user_id is NULL or user_id = $1)
     order by achievements.id
     "#)
         .bind(user_id)
