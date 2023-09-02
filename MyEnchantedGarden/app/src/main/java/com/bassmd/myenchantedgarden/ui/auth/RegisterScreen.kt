@@ -1,7 +1,7 @@
 package com.bassmd.myenchantedgarden.ui.auth
 
 
-import com.bassmd.myenchantedgarden.model.register.RegisterViewModel
+import com.bassmd.myenchantedgarden.viewModel.register.RegisterViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

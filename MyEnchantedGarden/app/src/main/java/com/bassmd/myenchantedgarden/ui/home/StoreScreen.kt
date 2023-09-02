@@ -1,6 +1,6 @@
 package com.bassmd.myenchantedgarden.ui.home
 
-import com.bassmd.myenchantedgarden.model.store.StoreViewModel
+import com.bassmd.myenchantedgarden.viewModel.store.StoreViewModel
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

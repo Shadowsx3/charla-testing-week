@@ -35,7 +35,7 @@ import com.bassmd.myenchantedgarden.R
 import com.bassmd.myenchantedgarden.graphs.AuthScreen
 import com.bassmd.myenchantedgarden.graphs.Graph
 import com.bassmd.myenchantedgarden.koin.appModule
-import com.bassmd.myenchantedgarden.model.login.LoginViewModel
+import com.bassmd.myenchantedgarden.viewModel.login.LoginViewModel
 import com.bassmd.myenchantedgarden.ui.auth.components.GradientButton
 import com.bassmd.myenchantedgarden.ui.auth.components.SimpleOutlinedPasswordTextField
 import com.bassmd.myenchantedgarden.ui.auth.components.SimpleOutlinedTextField

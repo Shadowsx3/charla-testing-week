@@ -1,23 +1,9 @@
-package com.bassmd.myenchantedgarden.model.plants
+package com.bassmd.myenchantedgarden.viewModel.plants
 
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.bassmd.myenchantedgarden.repo.UserRepository
-import com.bassmd.myenchantedgarden.dto.LoginRequest
 import com.bassmd.myenchantedgarden.dto.PlantRequest
-import com.bassmd.myenchantedgarden.dto.PlantsModel
 import com.bassmd.myenchantedgarden.dto.PlayRequest
-import com.bassmd.myenchantedgarden.dto.StatusModel
-import com.bassmd.myenchantedgarden.model.app.AppViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock.System.now
-import kotlinx.datetime.Instant
+import com.bassmd.myenchantedgarden.viewModel.app.AppViewModel
 
 
 class PlantsViewModel(private val userRepository: UserRepository) : AppViewModel(userRepository) {

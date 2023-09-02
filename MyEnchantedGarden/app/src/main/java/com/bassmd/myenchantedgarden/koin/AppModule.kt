@@ -1,10 +1,9 @@
 package com.bassmd.myenchantedgarden.koin
 
-import com.bassmd.myenchantedgarden.model.app.AppViewModel
-import com.bassmd.myenchantedgarden.model.plants.PlantsViewModel
-import com.bassmd.myenchantedgarden.model.profile.ProfileViewModel
-import com.bassmd.myenchantedgarden.model.register.RegisterViewModel
-import com.bassmd.myenchantedgarden.model.store.StoreViewModel
+import com.bassmd.myenchantedgarden.viewModel.plants.PlantsViewModel
+import com.bassmd.myenchantedgarden.viewModel.profile.ProfileViewModel
+import com.bassmd.myenchantedgarden.viewModel.register.RegisterViewModel
+import com.bassmd.myenchantedgarden.viewModel.store.StoreViewModel
 import com.bassmd.myenchantedgarden.repo.UserRepository
 import com.bassmd.myenchantedgarden.repo.UserRepositoryImpl
 import com.bassmd.myenchantedgarden.data.remote.achievements.AchievementsService
@@ -17,7 +16,7 @@ import com.bassmd.myenchantedgarden.data.remote.store.StoreService
 import com.bassmd.myenchantedgarden.data.remote.store.StoreServiceImpl
 import com.bassmd.myenchantedgarden.data.remote.user.UserService
 import com.bassmd.myenchantedgarden.data.remote.user.UserServiceImpl
-import com.bassmd.myenchantedgarden.model.login.LoginViewModel
+import com.bassmd.myenchantedgarden.viewModel.login.LoginViewModel
 import com.bassmd.myenchantedgarden.network.provideKtorClient
 import kotlinx.serialization.json.Json
 import org.koin.androidx.viewmodel.dsl.viewModel

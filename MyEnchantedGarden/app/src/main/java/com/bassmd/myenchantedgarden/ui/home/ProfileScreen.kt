@@ -1,6 +1,6 @@
 package com.bassmd.myenchantedgarden.ui.home
 
-import com.bassmd.myenchantedgarden.model.profile.ProfileViewModel
+import com.bassmd.myenchantedgarden.viewModel.profile.ProfileViewModel
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image

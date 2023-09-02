@@ -1,15 +1,10 @@
-package com.bassmd.myenchantedgarden.model.app
+package com.bassmd.myenchantedgarden.viewModel.app
 
-import android.util.Log
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.bassmd.myenchantedgarden.dto.AchievementsRequest
 import com.bassmd.myenchantedgarden.dto.AppError
 import com.bassmd.myenchantedgarden.repo.UserRepository
-import com.bassmd.myenchantedgarden.dto.LoginRequest
 import com.bassmd.myenchantedgarden.dto.StatusModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
