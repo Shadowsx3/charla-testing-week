@@ -13,11 +13,8 @@ class ProfileViewModel(private val userRepository: UserRepository) : AppViewMode
 
     suspend fun signOut(): Boolean {
         isBusy = true
-        val result: Result<StatusModel> = userRepository.logOut()
-        result.onFailure {
-            showError(it.message.toString())
-        }
+        userRepository.logOut()
         isBusy = false
-        return result.isSuccess
+        return true
     }
 }
