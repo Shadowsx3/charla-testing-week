@@ -93,7 +93,9 @@ fun PlantsScreen(
         LaunchedEffect(key1 = Unit) {
             while (true) {
                 delay(1000)
-                currentTime.value = now()
+                if (plants.value.any { p -> p.nextCollectTime >= currentTime.value }) {
+                    currentTime.value = now()
+                }
             }
         }
     }
@@ -336,7 +338,7 @@ fun PlayDialog(
                     textAlign = TextAlign.Center,
                 )
                 Text(
-                    text = if (userModel.value.isPremium) "Do you win or lose?" else "Do you draw or lose?",
+                    text = if (userModel.value.isPremium) "Do you lose or win?" else "Do you lose or draw?",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(10.dp),
                     fontSize = 22.sp

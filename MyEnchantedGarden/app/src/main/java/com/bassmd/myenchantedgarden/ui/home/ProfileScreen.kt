@@ -183,12 +183,11 @@ fun ProfileScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CreateImageProfile(Modifier.clickable {
-                    if (achievements.value.find { a -> a.name == "Lets play" } == null) {
-                        coroutineScope.launch {
-                            viewModel.unlock(AchievementsCodes.GAME)
+                    coroutineScope.launch {
+                        val result = viewModel.unlock(AchievementsCodes.GAME)
+                        if (!result) {
+                            viewModel.showError("🦔\nShe is indeed a cute hedgehog\n💘")
                         }
-                    } else {
-                        viewModel.showError("🦔\nShe is indeed a cute hedgehog\n💘")
                     }
                 })
                 CreateInfo(currentUser)

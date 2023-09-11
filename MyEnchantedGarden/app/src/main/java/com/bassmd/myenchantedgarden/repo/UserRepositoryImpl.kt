@@ -144,7 +144,10 @@ class UserRepositoryImpl(
 
     override suspend fun playGame(playRequest: PlayRequest): Result<StatusModel> {
         val response = userService.playGame(playRequest)
-        return handleResponse(response, "That's what I call a game 🌻") {
+        return handleResponse(
+            response,
+            if (playRequest.won) "That's what I call a game 🌻" else "Woops 🥲"
+        ) {
             userData.value = it.user
         }
     }
