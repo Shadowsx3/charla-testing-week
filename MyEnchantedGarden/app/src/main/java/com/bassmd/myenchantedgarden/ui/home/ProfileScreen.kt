@@ -189,7 +189,7 @@ fun ProfileScreen(
                             viewModel.showError("🦔\nShe is indeed a cute hedgehog\n💘")
                         }
                     }
-                })
+                }, currentUser.value.isPremium)
                 CreateInfo(currentUser)
                 Surface(
                     modifier = Modifier
@@ -244,7 +244,7 @@ fun ProfileScreen(
 
 
 @Composable
-private fun CreateImageProfile(modifier: Modifier = Modifier) {
+private fun CreateImageProfile(modifier: Modifier = Modifier, isPremium: Boolean = false) {
     Surface(
         modifier = Modifier
             .padding(top = 10.dp)
@@ -255,7 +255,7 @@ private fun CreateImageProfile(modifier: Modifier = Modifier) {
         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.hedgehog),
+            painter = painterResource(id = if (isPremium) R.drawable.queen else R.drawable.hedgehog),
             contentDescription = "profile image",
             modifier = modifier.size(150.dp),
             contentScale = ContentScale.Crop
