@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bassmd.myenchantedgarden.R
@@ -162,7 +163,9 @@ fun RegisterScreen(
                         modifier = Modifier.padding(start = 15.dp, end = 10.dp),
                         onClick = {
                             navController.navigate(AuthScreen.Login.route) {
-                                popUpTo(0)
+                                popUpTo(AuthScreen.SignUp.route) {
+                                    inclusive = true
+                                }
                             }
                         },
                     ) {

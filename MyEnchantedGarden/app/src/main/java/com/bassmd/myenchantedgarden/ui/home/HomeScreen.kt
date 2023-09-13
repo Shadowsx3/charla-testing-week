@@ -1,4 +1,5 @@
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,16 +37,15 @@ import com.bassmd.myenchantedgarden.ui.theme.MyEnchantedGardenTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(oldNavController: NavHostController) {
-    val navController = rememberNavController()
+fun HomeScreen(navController: NavHostController, homeNavController: NavHostController) {
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = { BottomBar(navController = homeNavController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            HomeNavGraph(navController = navController, oldNavHostController = oldNavController)
+            HomeNavGraph(navController, homeNavController)
         }
     }
 }
@@ -100,12 +100,4 @@ fun RowScope.AddItem(
             }
         }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun PreviewHomeScreen() {
-    MyEnchantedGardenTheme {
-        HomeScreen(rememberNavController())
-    }
 }

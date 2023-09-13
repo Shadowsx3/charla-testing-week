@@ -1,5 +1,6 @@
 package com.bassmd.myenchantedgarden.ui.auth
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -29,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bassmd.myenchantedgarden.R
@@ -49,6 +51,8 @@ import org.koin.core.context.startKoin
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = koinViewModel()) {
+    BackHandler(true) {
+    }
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val appError =
@@ -145,7 +149,10 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = ko
                                 val isLogged = viewModel.signIn()
                                 if (isLogged) {
                                     navController.navigate(Graph.HOME) {
-                                        popUpTo(0)
+                                        popUpTo(Graph.ROOT) {
+                                            inclusive = true
+                                        }
+                                        launchSingleTop = true
                                     }
                                 }
                             }
@@ -153,8 +160,10 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = ko
                     TextButton(
                         modifier = Modifier.padding(start = 15.dp, end = 10.dp),
                         onClick = {
-                            navController.navigate(AuthScreen.SignUp.route){
-                                popUpTo(0)
+                            navController.navigate(AuthScreen.SignUp.route) {
+                                popUpTo(AuthScreen.Login.route) {
+                                    inclusive = true
+                                }
                             }
                         },
                     ) {

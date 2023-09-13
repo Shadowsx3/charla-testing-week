@@ -2,6 +2,7 @@ package com.bassmd.myenchantedgarden.ui.home
 
 import com.bassmd.myenchantedgarden.viewModel.profile.ProfileViewModel
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -58,6 +59,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bassmd.myenchantedgarden.R
@@ -77,7 +80,8 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController,
+    homeNavController: NavHostController,
     viewModel: ProfileViewModel = koinViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -124,11 +128,14 @@ fun ProfileScreen(
                         modifier = Modifier.padding(8.dp),
                         onClick = {
                             coroutineScope.launch {
-                                val result = viewModel.signOut()
-                                if (result) {
-                                    navController.navigate(Graph.ROOT) {
-                                        popUpTo(0)
+                                viewModel.signOut()
+                                navController.navigate(Graph.ROOT) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        inclusive = true
                                     }
+                                }
+                                homeNavController.navigate(HomeBottomBar.Plants.route) {
+                                    popUpTo(homeNavController.graph.findStartDestination().id)
                                 }
                             }
                         }) {
