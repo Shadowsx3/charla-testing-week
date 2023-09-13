@@ -1,6 +1,7 @@
 package com.bassmd.myenchantedgarden.graphs
 
 import HomeScreen
+import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModelStore
@@ -32,7 +33,13 @@ fun RootNavigationGraph(
             HomeScreen(
                 navBarController
             ) {
-                navBarController.popBackStack()
+                navBarController.navigate(HomeBottomBar.Plants.route) {
+                    popUpTo(navBarController.graph.startDestinationId) {
+                        inclusive = true
+                        saveState = false
+                    }
+                    restoreState = false
+                }
                 navController.navigate(Graph.AUTHENTICATION)
             }
         }
