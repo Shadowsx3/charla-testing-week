@@ -12,7 +12,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyEnchantedGardenTheme {
-                RootNavigationGraph(navController = rememberNavController(), homeNavController =  rememberNavController())
+                RootNavigationGraph(
+                    navController = rememberNavController(),
+                    navBarController = rememberNavController()
+                )
             }
         }
     }

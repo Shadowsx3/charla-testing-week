@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelStore
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -37,15 +38,17 @@ import com.bassmd.myenchantedgarden.ui.theme.MyEnchantedGardenTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavHostController, homeNavController: NavHostController) {
+fun HomeScreen(navController: NavHostController, logout: () -> Unit) {
     Scaffold(
-        bottomBar = { BottomBar(navController = homeNavController) }
+        bottomBar = { BottomBar(navController = navController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            HomeNavGraph(navController, homeNavController)
+            HomeNavGraph(navController) {
+                logout()
+            }
         }
     }
 }
@@ -95,7 +98,10 @@ fun RowScope.AddItem(
         } == true,
         onClick = {
             navController.navigate(screen.route) {
-                popUpTo(navController.graph.findStartDestination().id)
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                restoreState = true
                 launchSingleTop = true
             }
         }

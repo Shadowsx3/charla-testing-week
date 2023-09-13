@@ -80,9 +80,8 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    navController: NavHostController,
-    homeNavController: NavHostController,
-    viewModel: ProfileViewModel = koinViewModel()
+    viewModel: ProfileViewModel = koinViewModel(),
+    logout: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val achievements =
@@ -129,14 +128,7 @@ fun ProfileScreen(
                         onClick = {
                             coroutineScope.launch {
                                 viewModel.signOut()
-                                navController.navigate(Graph.ROOT) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        inclusive = true
-                                    }
-                                }
-                                homeNavController.navigate(HomeBottomBar.Plants.route) {
-                                    popUpTo(homeNavController.graph.findStartDestination().id)
-                                }
+                                logout()
                             }
                         }) {
                         Icon(

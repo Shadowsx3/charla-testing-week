@@ -1,6 +1,7 @@
 package com.bassmd.myenchantedgarden.graphs
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,10 +12,9 @@ import com.bassmd.myenchantedgarden.ui.home.ProfileScreen
 import com.bassmd.myenchantedgarden.ui.home.StoreScreen
 
 @Composable
-fun HomeNavGraph(navController: NavHostController, homeNavController: NavHostController) {
+fun HomeNavGraph(navController: NavController, logout: () -> Unit) {
     NavHost(
-        navController = homeNavController,
-        route = Graph.HOME,
+        navController = navController as NavHostController,
         startDestination = HomeBottomBar.Plants.route,
     ) {
         composable(route = HomeBottomBar.Plants.route) {
@@ -24,7 +24,7 @@ fun HomeNavGraph(navController: NavHostController, homeNavController: NavHostCon
             StoreScreen()
         }
         composable(route = HomeBottomBar.Profile.route) {
-            ProfileScreen(navController, homeNavController)
+            ProfileScreen { logout() }
         }
     }
 }
