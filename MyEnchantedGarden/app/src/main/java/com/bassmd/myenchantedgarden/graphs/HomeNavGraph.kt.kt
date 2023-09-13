@@ -15,6 +15,7 @@ import com.bassmd.myenchantedgarden.ui.home.StoreScreen
 fun HomeNavGraph(navController: NavController, logout: () -> Unit) {
     NavHost(
         navController = navController as NavHostController,
+        route = Graph.HOME,
         startDestination = HomeBottomBar.Plants.route,
     ) {
         composable(route = HomeBottomBar.Plants.route) {

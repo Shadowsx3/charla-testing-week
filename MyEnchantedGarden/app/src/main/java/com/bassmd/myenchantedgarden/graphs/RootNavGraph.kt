@@ -24,6 +24,7 @@ fun RootNavigationGraph(
 ) {
     NavHost(
         navController = navController,
+        route = Graph.ROOT,
         startDestination = Graph.AUTHENTICATION,
     ) {
         authNavGraph(navController = navController)
@@ -31,12 +32,7 @@ fun RootNavigationGraph(
             HomeScreen(
                 navBarController
             ) {
-                navBarController.navigate(HomeBottomBar.Plants.route) {
-                    popUpTo(0) {
-                        saveState = false
-                    }
-                    restoreState = false
-                }
+                navBarController.popBackStack()
                 navController.navigate(Graph.AUTHENTICATION)
             }
         }
@@ -44,6 +40,7 @@ fun RootNavigationGraph(
 }
 
 object Graph {
+    const val ROOT = "root_graph"
     const val AUTHENTICATION = "auth_graph"
     const val HOME = "home_graph"
 }
